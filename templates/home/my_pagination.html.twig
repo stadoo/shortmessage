@@ -1,0 +1,32 @@
+{# default Sliding pagination control implementation #}
+{% if pageCount > 1 %}
+      <nav class="blog-pagination" aria-label="Pagination">
+
+        {% if first is defined and current != first %}
+                <a class="btn btn-outline-primary rounded-pill" href="{{ path(route, query|merge({(pageParameterName): first})) }}">&lt;&lt;</a>
+        {% endif %}
+
+        {% if previous is defined %}
+                <a class="btn btn-outline-primary rounded-pill" rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&lt;</a>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                    <a  class="btn btn-outline-primary rounded-pill"  href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+            {% else %}
+                <span class="btn btn-outline-primary rounded-pill disabled">{{ page }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+                <a class="btn btn-outline-secondary rounded-pill"
+               rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">&gt;</a>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+                <a class="btn btn-outline-secondary rounded-pill"
+               href="{{ path(route, query|merge({(pageParameterName): last})) }}">&gt;&gt;</a>
+        {% endif %}
+    </nav>
+
+{% endif %}
