@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Shortmessage!{% endblock %}
+{% block title %}Shortmessage - Category: {{posts[0].category}}{% endblock %}
 
 {% block body %}
 <br>
@@ -25,6 +25,8 @@
     </div>
   </div>
   <br>
+
+
 
         {% endfor %}
 

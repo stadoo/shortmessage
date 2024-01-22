@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Config\Resource\SelfCheckingResourceChecker;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -32,6 +33,12 @@ class Post
      #[ORM\ManyToOne(inversedBy: 'posts')]
      #[ORM\JoinColumn(nullable: false)]
      private ?Category $category = null;
+
+     #[ORM\Column]
+     private ?int $likeCount = null;
+
+     #[ORM\Column]
+     private ?int $dislikeCount = null;
 
     public function getId(): ?int
     {
@@ -106,6 +113,44 @@ class Post
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getLikeCount(): ?int
+    {
+        return $this->likeCount;
+    }
+
+    public function setLikeCount(int $likeCount): static
+    {
+        $this->likeCount = $likeCount;
+
+        return $this;
+    }
+    
+    public function incrementLikeCount(): self 
+    {
+        $this->likeCount++;
+
+        return $this;
+    }
+
+    public function getDislikeCount(): ?int
+    {
+        return $this->dislikeCount;
+    }
+
+    public function setDislikeCount(int $dislikeCount): static
+    {
+        $this->dislikeCount = $dislikeCount;
+
+        return $this;
+    }
+
+    public function incrementDislikeCount(): self
+    {
+        $this->dislikeCount++;
 
         return $this;
     }
