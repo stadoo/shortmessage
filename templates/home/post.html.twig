@@ -1,0 +1,15 @@
+  <div class="card">
+    <div class="card-header">
+      {{post.name}}
+    </div>
+    <div class="card-body" id="{{ post.id }}">
+      <blockquote class="blockquote mb-0">
+        <p>{{post.text}}</p>
+        <footer class="blockquote-footer">{{post.date}} by {{post.authorid}} - Category: {{post.category}} - 
+        <button id="likes-{{post.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})">{{post.likecount}}</button> | 
+        <button id="dislikes-{{post.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})">{{post.dislikecount}}</button>
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+  <br>

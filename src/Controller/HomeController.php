@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\LikesHistory;
 use App\Repository\CategoryRepository;
+use App\Repository\LikesHistoryRepository;
 use App\Repository\PostRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,10 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(PostRepository $postRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PostRepository $postRepository,LikesHistoryRepository $likesHistoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
 
         $posts = $postRepository->findBy(array(),array('id'=>'DESC'));
+        $likestatuses = $likesHistoryRepository->findBy(['uid' => '1']);
         //$post_to_show = $postRepository->findBy(array(),array('id'=>'DESC'),$posts_per_page,$posts_started_by);
 
         $pagination = $paginator->paginate(
@@ -29,10 +32,20 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'posts' => $posts,
+            'likestatuses' => $likestatuses,
             'pagination' => $pagination
         ]);
-    }
 
+    }
+    public function getlikestatus($postid,LikesHistoryRepository $likesHistoryRepository): Response
+    {
+        $likestatuses = $likesHistoryRepository->findBy(['uid' => '1', 'postid' => $postid]);
+        if($likestatuses) {
+            return new response("disabled");
+        }
+        return new response();
+
+    }
     /*#[Route('/category/n/{name}', name: 'showcategory')]
     public function showcategory($name, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
     {

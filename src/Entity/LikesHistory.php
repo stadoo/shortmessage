@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\UserLikesRepository;
+use App\Repository\LikesHistoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserLikesRepository::class)]
-class UserLikes
+#[ORM\Entity(repositoryClass: LikesHistoryRepository::class)]
+class LikesHistory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,27 +20,14 @@ class UserLikes
     private ?int $postid = null;
 
     #[ORM\Column]
-    private ?int $like_status = null;
+    private ?int $likestatus = null;
 
     #[ORM\Column(length: 255)]
     private ?string $date = null;
 
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUid(): ?int
-    {
-        return $this->uid;
-    }
-
-    public function setUid(int $uid): static
-    {
-        $this->uid = $uid;
-
-        return $this;
     }
 
     public function getPostid(): ?int
@@ -55,14 +42,26 @@ class UserLikes
         return $this;
     }
 
-    public function getLikeStatus(): ?int
+    public function getUid(): ?int
     {
-        return $this->like_status;
+        return $this->uid;
     }
 
-    public function setLikeStatus(int $like_status): static
+    public function setUid(int $uid): static
     {
-        $this->like_status = $like_status;
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    public function getLikestatus(): ?int
+    {
+        return $this->likestatus;
+    }
+
+    public function setLikestatus(int $likestatus): static
+    {
+        $this->likestatus = $likestatus;
 
         return $this;
     }

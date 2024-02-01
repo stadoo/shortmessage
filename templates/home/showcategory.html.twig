@@ -10,27 +10,10 @@
 {% endfor %}
 
 {% for post in pagination %}
-  <div class="card">
-    <div class="card-header">
-      {{post.name}}
-    </div>
-    <div class="card-body" id="{{ post.id }}">
-      <blockquote class="blockquote mb-0">
-        <p>{{post.text}}</p>
-        <footer class="blockquote-footer">{{post.date}} by {{post.authorid}} - Category: {{post.category}} - 
-        <button id="likes-{{post.id}}" class="like-btn" onclick="likePost({{post.id}})">{{post.likecount}}</button> | 
-        <button id="dislikes-{{post.id}}" class="dislike-btn" onclick="dislikePost({{post.id}})">{{post.dislikecount}}</button>
-        </footer>
-      </blockquote>
-    </div>
-  </div>
-  <br>
+    {% include 'home/post.html.twig' %}
+{% endfor %}
 
-
-
-        {% endfor %}
-
-            {{ knp_pagination_render(pagination) }}
+  {{ knp_pagination_render(pagination) }}
         
 
 {% block javascripts %}

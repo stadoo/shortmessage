@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\LikesHistory;
 use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -109,12 +110,32 @@ class PostController extends AbstractController
     public function thumpsup($id, EntityManagerInterface $em) 
     {
         $post = $em->getRepository(Post::class)->find($id);
+        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => '1', 'postid' => $id]);
+        if($like){
+            //echo "test";
+            $this->addFlash('erfolg', 'ID exestiert nicht');
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+        } else {
+            //create new entry in LikesHistory with uid and postid
+            $date= date('Y-m-d H:i:s');
+            $newLike = new LikesHistory();
+            $newLike->setUid('1');
+            $newLike->setPostid($id);
+            $newLike->setLikestatus('1'); // Like is 1 Dislike is 0
+            $newLike->setDate($date);
+            $em->persist($newLike);
+            $em->flush();
+
+            $post->incrementLikeCount();
+            $em->flush();
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+
+        }
         if(!$post)
         {
             $this->addFlash('erfolg', 'ID exestiert nicht');
         }
-        $post->incrementLikeCount();
-        $em->flush();
+
         //return $this->redirect($this->generateUrl('home'));
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount()]);
     }
