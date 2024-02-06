@@ -40,12 +40,14 @@
                     const response = JSON.parse(xhr.responseText);
                     //const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
                     document.getElementById("likes-"+`${postId}`).textContent = response.likes;
-                    if(response.status){
-                      document.getElementById("likes-"+`${postId}`).disabled = true;
-                    }
+
                     console.log(response.dislikes)
                     console.log(`${postId}`)
                     document.getElementById("dislikes-"+`${postId}`).textContent = response.dislikes;
+                    if(response.status){
+                      document.getElementById("likes-"+`${postId}`).disabled = true;
+                      document.getElementById("dislikes-"+`${postId}`).disabled = true;
+                    }
                 }
             };
 

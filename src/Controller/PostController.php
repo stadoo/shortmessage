@@ -113,7 +113,7 @@ class PostController extends AbstractController
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => '1', 'postid' => $id]);
         if($like){
             //echo "test";
-            $this->addFlash('erfolg', 'ID exestiert nicht');
+            //$this->addFlash('erfolg', 'ID exestiert nicht');
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
         } else {
             //create new entry in LikesHistory with uid and postid
@@ -143,6 +143,7 @@ class PostController extends AbstractController
     #[Route('/thumpsdown/{id}', name: 'thumpsdown')]
     public function thumpsdown($id, EntityManagerInterface $em) 
     {
+        /*
         $post = $em->getRepository(Post::class)->find($id);
         if(!$post)
         {
@@ -153,7 +154,38 @@ class PostController extends AbstractController
         $em->flush();
         //return $this->redirect($this->generateUrl('home'));
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount()]);
+        */
+        $post = $em->getRepository(Post::class)->find($id);
+        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => '1', 'postid' => $id]);
+        if(!$like){
+            //echo "test";
+            //$this->addFlash('erfolg', 'ID exestiert nicht');
+                        $date= date('Y-m-d H:i:s');
+            $newLike = new LikesHistory();
+            $newLike->setUid('1');
+            $newLike->setPostid($id);
+            $newLike->setLikestatus('2'); // Like is 1 Dislike is 0
+            $newLike->setDate($date);
+            $em->persist($newLike);
+            $em->flush();
 
+            $post->incrementDislikeCount();
+            $em->flush();
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+        } else {
+            //create new entry in LikesHistory with uid and postid
+
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+
+        }
+        if(!$post)
+        {
+            $this->addFlash('erfolg', 'ID exestiert nicht');
+        }
+
+        //return $this->redirect($this->generateUrl('home'));
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+        
     }
 
     /*    #[Route('/newpost', name: 'newpost')]
