@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\LikesHistory;
 use App\Entity\Post;
+use App\Entity\User;
+
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -73,9 +75,7 @@ class PostController extends AbstractController
     }
     #[Route('/newcategory', name: 'newcategory')]
     public function newcategory(EntityManagerInterface $em, Request $request): Response
-    {
-
-        
+    {      
         $category = new Category();
         $form = $this->createFormBuilder()
         ->add('name', TextType::class,[
@@ -110,16 +110,18 @@ class PostController extends AbstractController
     public function thumpsup($id, EntityManagerInterface $em) 
     {
         $post = $em->getRepository(Post::class)->find($id);
-        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => '1', 'postid' => $id]);
-        if($like){
-            //echo "test";
-            //$this->addFlash('erfolg', 'ID exestiert nicht');
-        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
-        } else {
-            //create new entry in LikesHistory with uid and postid
+        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
+        
+        if (!$post) {
+            $this->addFlash('erfolg', 'ID existiert nicht');
+            return new JsonResponse(['error' => 'ID existiert nicht']);
+        }
+
+        if(!$like){
+        //create new entry in LikesHistory with uid and postid
             $date= date('Y-m-d H:i:s');
             $newLike = new LikesHistory();
-            $newLike->setUid('1');
+            $newLike->setUid($this->getUser()->getId());
             $newLike->setPostid($id);
             $newLike->setLikestatus('1'); // Like is 1 Dislike is 0
             $newLike->setDate($date);
@@ -128,89 +130,74 @@ class PostController extends AbstractController
 
             $post->incrementLikeCount();
             $em->flush();
+            
+            return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => '1']);
+        }
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
-
-        }
-        if(!$post)
-        {
-            $this->addFlash('erfolg', 'ID exestiert nicht');
-        }
-
-        //return $this->redirect($this->generateUrl('home'));
-        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount()]);
     }
 
     #[Route('/thumpsdown/{id}', name: 'thumpsdown')]
     public function thumpsdown($id, EntityManagerInterface $em) 
-    {
-        /*
-        $post = $em->getRepository(Post::class)->find($id);
-        if(!$post)
         {
-            $this->addFlash('erfolg', 'ID exestiert nicht');
-        }
-        //$newDislikeCount = $post->incrementDislikeCount();
-        $post->incrementDislikeCount();
-        $em->flush();
-        //return $this->redirect($this->generateUrl('home'));
-        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount()]);
-        */
         $post = $em->getRepository(Post::class)->find($id);
-        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => '1', 'postid' => $id]);
+        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
+        
+        if (!$post) {
+            $this->addFlash('erfolg', 'ID existiert nicht');
+            return new JsonResponse(['error' => 'ID existiert nicht']);
+        }
+
         if(!$like){
-            //echo "test";
-            //$this->addFlash('erfolg', 'ID exestiert nicht');
-                        $date= date('Y-m-d H:i:s');
+        //create new entry in LikesHistory with uid and postid
+            $date= date('Y-m-d H:i:s');
             $newLike = new LikesHistory();
-            $newLike->setUid('1');
+            $newLike->setUid($this->getUser()->getId());
             $newLike->setPostid($id);
-            $newLike->setLikestatus('2'); // Like is 1 Dislike is 0
+            $newLike->setLikestatus('0'); // Like is 1 Dislike is 0
             $newLike->setDate($date);
             $em->persist($newLike);
             $em->flush();
 
             $post->incrementDislikeCount();
             $em->flush();
-        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
-        } else {
-            //create new entry in LikesHistory with uid and postid
-
-        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
-
+            
+            return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => '1']);
         }
-        if(!$post)
-        {
-            $this->addFlash('erfolg', 'ID exestiert nicht');
-        }
-
-        //return $this->redirect($this->generateUrl('home'));
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
-        
     }
 
-    /*    #[Route('/newpost', name: 'newpost')]
-    public function index(EntityManagerInterface $em, Request $request): Response
+        #[Route('/like/{id}/{status}', name: 'like')]
+    public function like($id,$status, EntityManagerInterface $em) 
     {
-        $newPost = new Post();
-        $form = $this->createForm(PostType::class, $newPost);
-        $form->handleRequest($request);
-
-
-        if ($form->isSubmitted())
-        {
-
-        $em->persist($newPost);
-        $em->flush();
-
-        $this->addFlash('erfolg', 'Your message has been posted successfully!');
-        return $this->redirect($this->generateUrl('home'));
+        $post = $em->getRepository(Post::class)->find($id);
+        $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
+        
+        if (!$post) {
+            $this->addFlash('erfolg', 'ID existiert nicht');
+            return new JsonResponse(['error' => 'ID existiert nicht']);
         }
 
-        return $this->render('post/index.html.twig', [
-            'newPostForm' => $form->createView(),
-        ]);
-
-    }*/
+        if(!$like){
+        //create new entry in LikesHistory with uid and postid
+            $date= date('Y-m-d H:i:s');
+            $newLike = new LikesHistory();
+            $newLike->setUid($this->getUser()->getId());
+            $newLike->setPostid($id);
+            $newLike->setLikestatus($status); // Like is 1 Dislike is 0
+            $newLike->setDate($date);
+            $em->persist($newLike);
+            $em->flush();
+            if($status){
+                $post->incrementLikeCount();
+            } elseif(!$status) {
+                $post->incrementDislikeCount();
+            }
+            $em->flush();
+            
+            return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => '1']);
+        }
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+    }
 
 
 }

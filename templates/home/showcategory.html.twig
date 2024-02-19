@@ -34,13 +34,18 @@
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Hier kannst du die Rückgabe verarbeiten, z.B. die Like/Dislike-Anzahl aktualisieren
+                    // Hier wird die Rückgabe verarbeitet, z.B. die Like/Dislike-Anzahl aktualisieren
                     const response = JSON.parse(xhr.responseText);
                     //const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
                     document.getElementById("likes-"+`${postId}`).textContent = response.likes;
+
                     console.log(response.dislikes)
                     console.log(`${postId}`)
                     document.getElementById("dislikes-"+`${postId}`).textContent = response.dislikes;
+                    if(response.status){
+                      document.getElementById("likes-"+`${postId}`).disabled = true;
+                      document.getElementById("dislikes-"+`${postId}`).disabled = true;
+                    }
                 }
             };
 

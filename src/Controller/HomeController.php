@@ -29,7 +29,6 @@ class HomeController extends AbstractController
         10 /*limit per page*/);
         $pagination->setTemplate('home/my_pagination.html.twig');
 
-
         return $this->render('home/index.html.twig', [
             'posts' => $posts,
             'likestatuses' => $likestatuses,
@@ -39,8 +38,13 @@ class HomeController extends AbstractController
     }
     public function getlikestatus($postid,LikesHistoryRepository $likesHistoryRepository): Response
     {
-        $likestatuses = $likesHistoryRepository->findBy(['uid' => '1', 'postid' => $postid]);
+        $user = empty($this->getUser());
+        if(!$user){$uid=$this->getUser()->getId();} else {$uid=0;};
+        //$likestatuses = $likesHistoryRepository->findBy(['uid' => $uid, 'postid' => $postid]);
+        $likestatuses = $likesHistoryRepository->findBy(['uid' => $uid, 'postid' => $postid]);
         if($likestatuses) {
+            return new response("disabled");
+        } elseif($user){
             return new response("disabled");
         }
         return new response();
