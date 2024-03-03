@@ -6,8 +6,9 @@ use App\Entity\Category;
 use App\Entity\LikesHistory;
 use App\Entity\Post;
 use App\Entity\User;
-
+use App\Form\PostEditFormType;
 use App\Form\PostType;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,6 +38,7 @@ class PostController extends AbstractController
         ->add('category', EntityType::class, [
             'class' => Category::class,
             'choice_label' => 'name',
+            
         ])
         ->add('post', SubmitType::class, [
             'attr' => array('class' => 'btn btn-outline-danger btn-sm')
@@ -52,12 +54,14 @@ class PostController extends AbstractController
         //$category = new Category();
         //$category->setName('Home');
         
-        $newPost->setAuthorid('1');
+        $newPost->setAuthorid($this->getUser()->getId());
         $newPost->setName($eingabe['name']);
         $newPost->setText($eingabe['text']);
         $newPost->setStatus('1');
         $newPost->setDate($date);
         $newPost->setCategory($eingabe['category']);
+        $newPost->setLikeCount(0);
+        $newPost->setDislikeCount(0);
         
         //$em->persist($category);
         $em->persist($newPost);
@@ -73,6 +77,40 @@ class PostController extends AbstractController
         ]);
 
     }
+
+    #[Route('/edit/{id}', name:'editpost')]
+    public function editpost($id, EntityManagerInterface $em, Request $request): Response
+    {   
+        $post=$em->getRepository(Post::class)->find($id);
+        if($post->getAuthorid() == $this->getUser()->getId())
+        {
+            $form = $this->createForm(PostEditFormType::class, $post);
+            $form->handleRequest($request);
+            if ($form->isSubmitted())
+            {
+                $eingabe = $form->getData();
+
+                $post->setName($form->get('name')->getData());
+                $post->setText($form->get('text')->getData());
+                $post->setCategory($form->get('category')->getData());
+
+                $em->persist($post);
+                $em->flush();
+
+                $this->addFlash('erfolg', 'Your message has been edited successfully!');
+                return $this->redirect($this->generateUrl('home'));
+                
+            }
+            return $this->render('post/edit.html.twig',[
+                'editForm' => $form->createView(),
+                'post' => $post
+            ]);
+        } else {
+            return $this->redirect($this->generateUrl('home'));
+        }
+
+    }
+
     #[Route('/newcategory', name: 'newcategory')]
     public function newcategory(EntityManagerInterface $em, Request $request): Response
     {      

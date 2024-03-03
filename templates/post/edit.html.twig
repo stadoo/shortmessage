@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block body %}
+
+<br>
+
+    {{ form_start(editForm) }}
+        {{ form_row(editForm.name) }}
+        {{ form_row(editForm.text, {
+            label: 'Text'
+        }) }}
+        {{ form_row(editForm.category) }}
+
+        {{ form_row(editForm.submit) }}
+    {{ form_end(editForm) }}
+
+{% endblock %}

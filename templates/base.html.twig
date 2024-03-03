@@ -40,6 +40,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ app.user ? path('logout') : path('login') }}">{{app.user ? 'Logout' : 'Login'}}</a>
       </li>
+      <li class="nav-item">
+        {{app.user ? app.user.email}}
+      </li>
     </ul>
   </div>
 
