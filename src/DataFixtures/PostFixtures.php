@@ -7,11 +7,24 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Post;
 use App\Entity\Category;
 use Faker\Factory;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class PostFixtures extends Fixture
-{
+{   
+    private $parameters;
+        
+    public function __construct(ParameterBagInterface $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
     public function load(ObjectManager $manager)
     {
+        //to activate check parameter at services.yaml
+        if ($this->parameters->get('app.fixtures.post_enabled') === false) {
+            return;
+        }
+
         $faker = Factory::create();
 
         $authorIds = [1, 2];
