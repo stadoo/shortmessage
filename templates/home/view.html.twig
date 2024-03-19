@@ -12,13 +12,22 @@
     <div class="alert alert-danger"><h3>{{ message }}</h3></div>
 {% endfor %}
 
-{% for post in pagination %}
-
-    {% include 'home/post.html.twig' %}
-
-{% endfor %}
-
-            {{ knp_pagination_render(pagination) }}
+  <div class="card">
+    <div class="card-header">
+      {{post.name}} -{{post.id}}
+    </div>
+    <div class="card-body" id="{{ post.id }}">
+      <blockquote class="blockquote mb-0">
+        <p>{{post.text}}</p>
+        <footer class="blockquote-footer">{{post.date}} by {{post.authorid}} - Category: {{post.category}} - 
+        <button id="likes-{{post.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})">{{post.likecount}}</button> | 
+        <button id="dislikes-{{post.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})">{{post.dislikecount}}</button>
+        {% if app.user %}{% if app.user.id == post.authorid %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+  <br>
         
 
 {% block javascripts %}

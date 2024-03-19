@@ -97,7 +97,7 @@ class PostController extends AbstractController
                 $em->persist($post);
                 $em->flush();
 
-                $this->addFlash('erfolg', 'Your message has been edited successfully!');
+                $this->addFlash('success', 'Your message has been edited successfully!');
                 return $this->redirect($this->generateUrl('home'));
                 
             }
@@ -108,8 +108,25 @@ class PostController extends AbstractController
         } else {
             return $this->redirect($this->generateUrl('home'));
         }
-
     }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete($id, EntityManagerInterface $em)
+    {
+        $post = $em->getRepository(Post::class)->find($id);
+        if($post->getAuthorid() == $this->getUser()->getId())
+        {
+            $em->remove($post);
+            $em->flush();
+
+            $this->addFlash('success', 'Your post has been deleted successfully!');
+        } else {
+            $this->addFlash('failure', 'You are not the owner of this post!');
+        }
+        return $this->redirect($this->generateUrl('home')); 
+    }
+
+    
 
     #[Route('/newcategory', name: 'newcategory')]
     public function newcategory(EntityManagerInterface $em, Request $request): Response
@@ -135,7 +152,7 @@ class PostController extends AbstractController
         $em->persist($category);
         $em->flush();
 
-        $this->addFlash('erfolg', 'New Category has been created successfully!');
+        $this->addFlash('success', 'New Category has been created successfully!');
         return $this->redirect($this->generateUrl('home'));
         }
 
@@ -151,7 +168,7 @@ class PostController extends AbstractController
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
         
         if (!$post) {
-            $this->addFlash('erfolg', 'ID existiert nicht');
+            $this->addFlash('failure', 'ID existiert nicht');
             return new JsonResponse(['error' => 'ID existiert nicht']);
         }
 
@@ -181,7 +198,7 @@ class PostController extends AbstractController
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
         
         if (!$post) {
-            $this->addFlash('erfolg', 'ID existiert nicht');
+            $this->addFlash('failure', 'ID existiert nicht');
             return new JsonResponse(['error' => 'ID existiert nicht']);
         }
 
@@ -211,7 +228,7 @@ class PostController extends AbstractController
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
         
         if (!$post) {
-            $this->addFlash('erfolg', 'ID existiert nicht');
+            $this->addFlash('failure', 'ID existiert nicht');
             return new JsonResponse(['error' => 'ID existiert nicht']);
         }
 

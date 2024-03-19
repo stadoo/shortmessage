@@ -36,6 +36,22 @@ class HomeController extends AbstractController
         ]);
 
     }
+
+    #[Route('/view/{id}', name:'view')]
+    public function view($id, PostRepository $pr): Response 
+    {
+        $post = $pr->find($id);
+        if($post){
+            return $this->render('home/view.html.twig', [
+            'post' => $post
+        ]);
+        } else {
+            $this->addFlash('failure', 'This post does not exist!');
+            return $this->redirect($this->generateUrl('home'));
+        }
+        
+    }
+
     public function getlikestatus($postid,LikesHistoryRepository $likesHistoryRepository): Response
     {
         $user = empty($this->getUser());
