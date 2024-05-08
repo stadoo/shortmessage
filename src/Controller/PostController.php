@@ -114,7 +114,7 @@ class PostController extends AbstractController
     public function delete($id, EntityManagerInterface $em)
     {
         $post = $em->getRepository(Post::class)->find($id);
-        if($post->getAuthorid() == $this->getUser()->getId())
+        if($post->getAuthorid() == $this->getUser()->getId() || $this->isGranted('ROLE_ADMIN') )
         {
             $em->remove($post);
             $em->flush();

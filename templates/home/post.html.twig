@@ -8,9 +8,9 @@
         <footer class="blockquote-footer">{{post.date}} by {{post.authorid}} - Category: {{post.category}} - 
         <button id="likes-{{post.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})">{{post.likecount}}</button> | 
         <button id="dislikes-{{post.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})">{{post.dislikecount}}</button>
-        {% if app.user %}{% if app.user.id == post.authorid %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
+        {% if app.user %}{% if app.user.id == post.authorid or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
         </footer>
       </blockquote>
     </div>
   </div>
-  <br>
+  <br> 

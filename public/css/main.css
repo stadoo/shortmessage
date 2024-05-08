@@ -1,4 +1,42 @@
+:root {
+  --bg-color: #f6f9f8;
+  --second-bg-color: #b3d1e2;
+  --text-color: #282424;
+  --main-color: #3387b2; /* Blue */
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+.card {
+  border-style: none;
+}
+.card .card-header {
+  background-color: var(--bg-color);
+  border-style: none;
+  border-radius: 0%;
+}
+
 .card .card-header a {
-  color: black;
+  color: var(--text-color);
   text-decoration: none;
+  font-weight: bold;
+}
+
+.card .card-body {
+  background-color: var(--bg-color);
+}
+
+.container.register {
+  text-align: center;
+}
+
+.container.register form div label {
+  padding-right: 1rem;
+  padding-top: 1rem;
+}
+
+.container .row .posts {
+  background: #434040;
 }
