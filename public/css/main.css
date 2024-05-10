@@ -9,6 +9,10 @@ body {
   background-color: var(--bg-color);
 }
 
+.navbar {
+  justify-content: space-between;
+}
+
 .card {
   border-style: none;
 }
@@ -16,6 +20,7 @@ body {
   background-color: var(--bg-color);
   border-style: none;
   border-radius: 0%;
+  padding-top: 1rem;
 }
 
 .card .card-header a {
@@ -26,6 +31,7 @@ body {
 
 .card .card-body {
   background-color: var(--bg-color);
+  padding-bottom: 1rem;
 }
 
 .container.register {
@@ -38,5 +44,10 @@ body {
 }
 
 .container .row .posts {
-  background: #434040;
+  background: var(--bg-color);
+}
+
+hr {
+  background-color: var(--bg-color);
+  margin: 0;
 }
