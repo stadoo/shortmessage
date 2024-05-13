@@ -28,11 +28,26 @@ class UserFixtures extends Fixture
             return;
         }
 
+        /* // create single user 
         $user = new User();
         $user->setEmail('test3@test.de');
         $hashedPassword = $this->userPasswordHasher->hashPassword($user, 'testtest');
         $user->setPassword($hashedPassword);
         $manager->persist($user);
         $manager->flush();
+        */
+
+
+        //create multiple user
+        for($i = 1 ; $i <= 10 ; $i++) {
+            $user = new User();
+            $user->setEmail('test'.$i.'@test.de');
+            $hashedPassword = $this->userPasswordHasher->hashPassword($user, 'testtest');
+            $user->setPassword($hashedPassword);
+            $manager->persist($user);
+        }
+
+        $manager->flush();
+
     }
 }

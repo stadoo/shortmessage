@@ -8,8 +8,9 @@ use App\Entity\Post;
 use App\Entity\Category;
 use Faker\Factory;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PostFixtures extends Fixture
+class PostFixtures extends Fixture implements DependentFixtureInterface
 {   
     private $parameters;
         
@@ -29,9 +30,10 @@ class PostFixtures extends Fixture
 
         $authorIds = [1, 2];
 
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $newPost = new Post();
-            $newPost->setAuthorid($authorIds[array_rand($authorIds)]);
+            //$newPost->setAuthorid($authorIds[array_rand($authorIds)]);
+            $newPost->setAuthorid(rand(1,10));
             $newPost->setName($faker->sentence());
             $newPost->setText($faker->paragraph());
             $newPost->setStatus(1);
@@ -42,17 +44,25 @@ class PostFixtures extends Fixture
 
 
             // Zufällige Kategorie aus der Datenbank abrufen und setzen
-            $categoryId = $faker->randomElement([1, 2, 5]);
+            $categoryId = $faker->randomElement([1, 2, 3]);
             $category = $manager->getRepository(Category::class)->find($categoryId);
             if ($category) {
                 $newPost->setCategory($category);
             } else {
-                $newPost->setCategory(1);
+                $category = $manager->getRepository(Category::class)->find(1);
+                $newPost->setCategory($category);
             }
 
             $manager->persist($newPost);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            CategoryFixtures::class,
+        ];
     }
 }

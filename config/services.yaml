@@ -5,7 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
   app.fixtures.user_enabled: false
-  app.fixtures.post_enabled: false
+  app.fixtures.post_enabled: true
+  app.fixtures.category_enabled: false # in post fixtures
 
 services:
   # default configuration for services in *this* file
