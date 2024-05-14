@@ -32,11 +32,27 @@
                   <li><a class="dropdown-item" href="{{path('showcategory', {'id' : 'home'}) }}">Home</a></li>
                   <li><a class="dropdown-item" href="{{path('showcategory', {'id' : 'technique'}) }}">Technique</a></li>
                   <li><a class="dropdown-item" href="{{path('showcategory', {'id' : 'fun'}) }}">Fun</a></li>
+                  {% if is_granted('ROLE_ADMIN') %}
+                    <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{{path('newcategory')}}">Create new Category</a></li>
+                  {% endif %}
+                  
+                </ul>
+        </li>
+        {% if is_granted('ROLE_ADMIN') %}
+                  <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Admin
+                </a>
+                <ul class="dropdown-menu">
 
+                  <li><a class="dropdown-item" href="{{path('admin_userlist') }}">Users</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="{{path('newcategory')}}">Create new Category</a></li>
                 </ul>
         </li>
+
+        {% endif %}
       </ul>
           <ul class="navbar-nav d-fex">
 
