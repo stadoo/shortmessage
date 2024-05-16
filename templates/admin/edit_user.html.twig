@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block body %}
+
+<br>
+
+    {{ form_start(editForm) }}
+        {{ form_row(editForm.email) }}
+        {{ form_row(editForm.password, {
+            label: 'Password'
+        }) }}
+
+        {{ form_row(editForm.submit) }}
+    {{ form_end(editForm) }}
+
+{% endblock %}

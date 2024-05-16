@@ -82,7 +82,7 @@ class PostController extends AbstractController
     public function editpost($id, EntityManagerInterface $em, Request $request): Response
     {   
         $post=$em->getRepository(Post::class)->find($id);
-        if($post->getAuthorid() == $this->getUser()->getId())
+        if($post->getAuthorid() == $this->getUser()->getId()  || $this->isGranted('ROLE_ADMIN') )
         {
             $form = $this->createForm(PostEditFormType::class, $post);
             $form->handleRequest($request);
