@@ -19,7 +19,7 @@ class HomeController extends AbstractController
     public function index(PostRepository $postRepository,LikesHistoryRepository $likesHistoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
 
-        $posts = $postRepository->findBy(array(),array('id'=>'DESC'));
+        $posts = $postRepository->findBy(array(),array('date'=>'DESC'));
         $likestatuses = $likesHistoryRepository->findBy(['uid' => '1']);
         //$post_to_show = $postRepository->findBy(array(),array('id'=>'DESC'),$posts_per_page,$posts_started_by);
 

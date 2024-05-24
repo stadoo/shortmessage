@@ -58,7 +58,7 @@ class PostController extends AbstractController
         $newPost->setName($eingabe['name']);
         $newPost->setText($eingabe['text']);
         $newPost->setStatus('1');
-        $newPost->setDate($date);
+        $newPost->setDate(new \DateTime());
         $newPost->setCategory($eingabe['category']);
         $newPost->setLikeCount(0);
         $newPost->setDislikeCount(0);
@@ -179,7 +179,7 @@ class PostController extends AbstractController
             $newLike->setUid($this->getUser()->getId());
             $newLike->setPostid($id);
             $newLike->setLikestatus('1'); // Like is 1 Dislike is 0
-            $newLike->setDate($date);
+            $newLike->setDate(new \DateTime());
             $em->persist($newLike);
             $em->flush();
 
@@ -209,7 +209,7 @@ class PostController extends AbstractController
             $newLike->setUid($this->getUser()->getId());
             $newLike->setPostid($id);
             $newLike->setLikestatus('0'); // Like is 1 Dislike is 0
-            $newLike->setDate($date);
+            $newLike->setDate(new \DateTime());
             $em->persist($newLike);
             $em->flush();
 
@@ -239,7 +239,7 @@ class PostController extends AbstractController
             $newLike->setUid($this->getUser()->getId());
             $newLike->setPostid($id);
             $newLike->setLikestatus($status); // Like is 1 Dislike is 0
-            $newLike->setDate($date);
+            $newLike->setDate(new \DateTime());
             $em->persist($newLike);
             $em->flush();
             if($status){

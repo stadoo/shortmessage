@@ -37,7 +37,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $newPost->setName($faker->sentence());
             $newPost->setText($faker->paragraph());
             $newPost->setStatus(1);
-            $newPost->setDate($faker->dateTimeThisMonth()->format('Y-m-d H:i:s'));
+            $newPost->setDate($faker->dateTimeBetween('-30 days', ''));
             $newPost->setLikeCount(0);
             $newPost->setDislikeCount(0);
 

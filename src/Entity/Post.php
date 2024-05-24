@@ -27,8 +27,8 @@ class Post
     #[ORM\Column]
     private ?int $status = null;
 
-     #[ORM\Column(length: 255)]
-    private ?string $date = null;
+     #[ORM\Column(type:'datetime', nullable:false)]
+    private $date;
 
      #[ORM\ManyToOne(inversedBy: 'posts')]
      #[ORM\JoinColumn(nullable: false)]
@@ -93,12 +93,12 @@ class Post
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(string $date): static
+    public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
 

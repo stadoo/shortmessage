@@ -22,8 +22,8 @@ class LikesHistory
     #[ORM\Column]
     private ?int $likestatus = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $date = null;
+    #[ORM\Column(type:'datetime', nullable:false)]
+    private $date;
 
     public function getId(): ?int
     {
@@ -66,12 +66,12 @@ class LikesHistory
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(string $date): static
+    public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
 
