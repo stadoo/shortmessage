@@ -46,7 +46,7 @@ class PostController extends AbstractController
         ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted())
+        if ($form->isSubmitted() && $form->isValid())
         {
         $eingabe = $form->getData();
         $date= date('Y-m-d H:i:s');
@@ -86,7 +86,7 @@ class PostController extends AbstractController
         {
             $form = $this->createForm(PostEditFormType::class, $post);
             $form->handleRequest($request);
-            if ($form->isSubmitted())
+            if ($form->isSubmitted() && $form->isValid())
             {
                 $eingabe = $form->getData();
 
@@ -143,7 +143,7 @@ class PostController extends AbstractController
         ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted())
+        if ($form->isSubmitted() && $form->isValid())
         {
         $eingabe = $form->getData();
 

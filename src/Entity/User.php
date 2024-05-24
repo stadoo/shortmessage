@@ -29,6 +29,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    //for password-reset
+    #[ORM\Column(type:'string', length:255, nullable:true)]
+    private $resetToken;
+
+    //for password-reset
+    #[ORM\Column(type:'datetime', nullable:true)]
+    private $tokenExpirationDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,5 +105,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    // for passwordreset
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+    // for passwordreset
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+    // for passwordreset
+    public function getTokenExpirationDate(): ?\DateTimeInterface
+    {
+        return $this->tokenExpirationDate;
+    }
+    // for passwordreset
+    public function setTokenExpirationDate(?\DateTimeInterface $tokenExpirationDate): self
+    {
+        $this->tokenExpirationDate = $tokenExpirationDate;
+        return $this;
+    }
+    // for passwordreset
+    public function isTokenExpired(): bool
+    {
+        return $this->tokenExpirationDate < new \DateTime();
     }
 }

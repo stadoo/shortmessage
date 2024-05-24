@@ -7,6 +7,7 @@ parameters:
   app.fixtures.user_enabled: false
   app.fixtures.post_enabled: true
   app.fixtures.category_enabled: false # in post fixtures
+  app.passwortreset_mail: "no-reply@example.com"
 
 services:
   # default configuration for services in *this* file

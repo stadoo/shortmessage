@@ -59,7 +59,7 @@ class AdminController extends AbstractController
         ])
         ->getForm();
         $form->handleRequest($request);
-            if ($form->isSubmitted())
+            if ($form->isSubmitted() && $form->isValid())
             {
                 $eingabe = $form->getData();
 
