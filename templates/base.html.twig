@@ -76,10 +76,24 @@
 </nav>
 <div class="container">
   <div class="row">
-    <div class="posts col-sm-10 col-md-9">
-    {% block body %}{% endblock %}
+    <div class="nav-sidebar col-sm-1 col-md-2">
+    <a href="#">Category</a>
+      <ul>
+        <ul>
+        </ul>
+        <li><a href="{{path('showcategory', {'id' : 'home'}) }}">Home</a></li>
+        <li><a href="{{path('showcategory', {'id' : 'technique'}) }}">Technique</a></li>
+        <li><a href="{{path('showcategory', {'id' : 'fun'}) }}">Fun</a></li>
+      </ul>
+      
     </div>
-    <div class="col-sm-2 col-md-3">Ad</div>
+    <div class="posts col-sm-9 col-md-8">
+      <div class="overflow-auto">
+          {% block body %}{% endblock %}
+
+      </div>
+    </div>
+    <div class="ad col-sm-2 col-md-2">Ad</div>
 
   </div>
 

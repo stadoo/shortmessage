@@ -9,8 +9,66 @@ body {
   background-color: var(--bg-color);
 }
 
+.container {
+  padding: 0 0 0 0;
+  max-width: 1200px;
+}
 .navbar {
   justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+.nav-sidebar {
+  background-color: rgb(33, 37, 41);
+  padding: 0;
+  text-align: left;
+  text-indent: 0.5rem;
+
+  position: fixed;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  width: 200px;
+  margin-top: 50px;
+}
+
+.nav-sidebar a {
+  text-decoration: none;
+  color: var(--bg-color);
+}
+
+.nav-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-sidebar ul li {
+  padding-left: 0.1rem;
+  position: relative;
+  padding: 0.5rem 0 0.5rem 0;
+  border-bottom: 0.1rem solid var(--bg-color);
+}
+
+.nav-sidebar ul li:hover {
+  background-color: #3387b2;
+}
+
+.nav-sidebar ul li a {
+  text-decoration: none;
+  color: var(--bg-color);
+}
+
+.container .row .posts {
+  background: var(--bg-color);
+  margin-left: 200px;
+  margin-top: 50px;
+}
+
+.container .row .ad {
+  margin-top: 50px;
 }
 
 .card {
@@ -41,10 +99,6 @@ body {
 .container.register form div label {
   padding-right: 1rem;
   padding-top: 1rem;
-}
-
-.container .row .posts {
-  background: var(--bg-color);
 }
 
 hr {
