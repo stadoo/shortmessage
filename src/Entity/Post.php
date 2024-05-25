@@ -15,8 +15,9 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $authorid = null;
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+     #[ORM\JoinColumn(nullable: false)]
+     private ?User $author = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -45,14 +46,14 @@ class Post
         return $this->id;
     }
 
-    public function getAuthorid(): ?int
+    public function getAuthor(): ?User
     {
-        return $this->authorid;
+        return $this->author;
     }
 
-    public function setAuthorid(int $authorid): static
+    public function setAuthor(?User $author): static
     {
-        $this->authorid = $authorid;
+        $this->author = $author;
 
         return $this;
     }

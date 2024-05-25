@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -16,6 +17,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
+    private Collection $posts;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -133,5 +137,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isTokenExpired(): bool
     {
         return $this->tokenExpirationDate < new \DateTime();
+    }
+
+    public function __toString()
+    {
+        return $this->email;
     }
 }
