@@ -1,0 +1,3 @@
+{% for category in categorys %}
+    <li><a href="{{path('showcategory', {'idOrSlug' : category.name|replace({' ': '-'})|lower }) }}">{{ category.name }}</a></li>
+{% endfor %}

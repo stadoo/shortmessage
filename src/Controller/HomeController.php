@@ -66,51 +66,48 @@ class HomeController extends AbstractController
         return new response();
 
     }
-    /*#[Route('/category/n/{name}', name: 'showcategory')]
-    public function showcategory($name, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
+
+    public function getcatergory(CategoryRepository $categoryRepository):Response 
     {
-        $categoryid = $categoryRepository->findOneBy(['name' => $name]);
-        $posts = $postRepository->findBy(['category' => $categoryid->getId()],array(),array('id'=>'DESC'));
-
-                $pagination = $paginator->paginate(
-        $posts, 
-        $request->query->getInt('page', 1), 
-        10 );
-        $pagination->setTemplate('home/my_pagination.html.twig');
-
-
-        return $this->render('home/showcategory.html.twig', [
-            'posts' => $posts,
-            'pagination' => $pagination
+        $categorys = $categoryRepository->findBy(array(),array('id' => 'ASC'));
+        $count = count($categorys);
+        
+        return $this->render('navbar/_sidebar_categorys.html.twig', [
+            'categorys' => $categorys
         ]);
     }
-    */
-    
-    #[Route('/category/{id}', name: 'showcategory')]
-    public function showcategorybyid($id, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
-    {
-        $posts = $postRepository->findBy(['category' => $id],array('id'=>'DESC'));
-        if(!$posts){
-             //return $this->redirect($this->generateUrl('home')); 
-             $categoryid = $categoryRepository->findOneBy(['name' => $id]);
-        if($categoryid) {
-                $posts = $postRepository->findBy(['category' => $categoryid->getId()],array('id'=>'DESC'));   
-            } else {
-                return $this->redirect($this->generateUrl('home'));
-            }
-        } 
-        $pagination = $paginator->paginate(
-            $posts, 
-            $request->query->getInt('page', 1), 
-            10 );
-        $pagination->setTemplate('home/my_pagination.html.twig');
 
+    #[Route('/category/{idOrSlug}', name: 'showcategory', requirements: ['idOrSlug' => '[a-zA-Z0-9\-]+'])]
+    public function showcategorybyidOrslug($idOrSlug, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+        if (is_numeric($idOrSlug)) {
+            $category = $categoryRepository->find($idOrSlug);
+        } else {
+            $categoryName = str_replace('-', ' ', $idOrSlug);
+            $category = $categoryRepository->findOneBy(['name' => $categoryName]);
+        }
+
+        if (!$category) {
+            return $this->redirectToRoute('home');
+        }
+
+        $posts = $postRepository->findBy(['category' => $category->getId()], ['id' => 'DESC']);
+
+        if (empty($posts)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $pagination = $paginator->paginate(
+            $posts,
+            $request->query->getInt('page', 1),
+            10
+        );
+        $pagination->setTemplate('home/my_pagination.html.twig');
 
         return $this->render('home/showcategory.html.twig', [
             'posts' => $posts,
             'pagination' => $pagination
         ]);
-    
     }
 
 

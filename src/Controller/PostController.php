@@ -54,7 +54,7 @@ class PostController extends AbstractController
         //$category = new Category();
         //$category->setName('Home');
         
-        $newPost->setAuthorid($this->getUser()->getId());
+        $newPost->setAuthor($this->getUser());
         $newPost->setName($eingabe['name']);
         $newPost->setText($eingabe['text']);
         $newPost->setStatus('1');
