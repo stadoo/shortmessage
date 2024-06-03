@@ -67,14 +67,20 @@ class HomeController extends AbstractController
 
     }
 
-    public function getcatergory(CategoryRepository $categoryRepository):Response 
+    public function getcatergory($navslug,CategoryRepository $categoryRepository):Response 
     {
         $categorys = $categoryRepository->findBy(array(),array('id' => 'ASC'));
-        $count = count($categorys);
-        
-        return $this->render('navbar/_sidebar_categorys.html.twig', [
-            'categorys' => $categorys
+        if($navslug=="sidebar"){
+            return $this->render('navbar/_sidebar_categorys.html.twig', [
+                'categorys' => $categorys
+                        
         ]);
+        } elseif($navslug=="headnavbar"){
+            return $this->render('navbar/_navbar_categorys.html.twig', [
+                'categorys' => $categorys
+        ]);
+        }
+        
     }
 
     #[Route('/category/{idOrSlug}', name: 'showcategory', requirements: ['idOrSlug' => '[a-zA-Z0-9\-]+'])]

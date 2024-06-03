@@ -1,0 +1,3 @@
+{% for category in categorys %}
+    <li><a class="dropdown-item" href="{{path('showcategory', {'idOrSlug' : category.name|replace({' ': '-'})|lower }) }}">{{ category.name }}</a></li>
+{% endfor %}

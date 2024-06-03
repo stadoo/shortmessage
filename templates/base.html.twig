@@ -28,11 +28,7 @@
                   Category
                 </a>
                 <ul class="dropdown-menu">
-
-                  <li><a class="dropdown-item" href="{{path('showcategory', {'idOrSlug' : 'home'}) }}">Home</a></li>
-                  <li><a class="dropdown-item" href="{{path('showcategory', {'idOrSlug' : 'technique'}) }}">Technique</a></li>
-                  <li><a class="dropdown-item" href="{{path('showcategory', {'idOrSlug' : 'fun'}) }}">Fun</a></li>
-                          {{render(controller('App\\Controller\\HomeController::getcatergory'))}}
+                  {{render(controller('App\\Controller\\HomeController::getcatergory', {'navslug':'headnavbar'}))}}
 
                   {% if is_granted('ROLE_ADMIN') %}
                     <li><hr class="dropdown-divider"></li>
@@ -83,7 +79,7 @@
       <ul>
         <ul>
         </ul>
-        {{render(controller('App\\Controller\\HomeController::getcatergory'))}}
+        {{render(controller('App\\Controller\\HomeController::getcatergory', {'navslug':'sidebar'}))}}
       </ul>
 
       
