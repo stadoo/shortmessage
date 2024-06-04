@@ -9,6 +9,17 @@
     <div class="alert alert-success"><h3>{{ message }}</h3></div>
 {% endfor %}
 
+<form method="get" action="{{ path('showcategory', {'idOrSlug' : posts[0].category|replace({' ': '-'})|lower }) }}">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="date_desc" {% if currentSort == 'date_desc' %}selected{% endif %}>Date descending</option>
+            <option value="date_asc" {% if currentSort == 'date_asc' %}selected{% endif %}>Date ascending</option>
+            <option value="thumbsup_desc" {% if currentSort == 'thumbsup_desc' %}selected{% endif %}>Thumpsup descending</option>
+            <option value="thumbsup_asc" {% if currentSort == 'thumbsup_asc' %}selected{% endif %}>Thumpsup ascending</option>
+            <option value="thumbsdown_desc" {% if currentSort == 'thumbsdown_desc' %}selected{% endif %}>Thumpsdown descending</option>
+            <option value="thumbsdown_asc" {% if currentSort == 'thumbsdown_asc' %}selected{% endif %}>Thumpsdown ascending</option>
+        </select>
+    </form>
+
 {% for post in pagination %}
     {% include 'home/post.html.twig' %}
 {% endfor %}

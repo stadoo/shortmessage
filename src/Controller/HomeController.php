@@ -19,7 +19,30 @@ class HomeController extends AbstractController
     public function index(PostRepository $postRepository,LikesHistoryRepository $likesHistoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
 
-        $posts = $postRepository->findBy(array(),array('date'=>'DESC'));
+    $sort = $request->query->get('sort', 'date_desc');
+    switch ($sort) {
+        case 'date_asc':
+            $orderBy = ['date' => 'ASC'];
+            break;
+        case 'thumbsup_desc':
+            $orderBy = ['likeCount' => 'DESC'];
+            break;
+        case 'thumbsup_asc':
+            $orderBy = ['likeCount' => 'ASC'];
+            break;
+        case 'thumbsdown_desc':
+            $orderBy = ['dislikeCount' => 'DESC'];
+            break;
+        case 'thumbsdown_asc':
+            $orderBy = ['dislikeCount' => 'ASC'];
+            break;
+        case 'date_desc':
+        default:
+            $orderBy = ['date' => 'DESC'];
+            break;
+    }
+
+        $posts = $postRepository->findBy([], $orderBy);
         $likestatuses = $likesHistoryRepository->findBy(['uid' => '1']);
         //$post_to_show = $postRepository->findBy(array(),array('id'=>'DESC'),$posts_per_page,$posts_started_by);
 
@@ -32,7 +55,9 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'posts' => $posts,
             'likestatuses' => $likestatuses,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'currentSort' => $sort
+
         ]);
 
     }
@@ -97,7 +122,31 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $posts = $postRepository->findBy(['category' => $category->getId()], ['id' => 'DESC']);
+        $sort = $request->query->get('sort', 'date_desc');
+        switch ($sort) {
+        case 'date_asc':
+            $orderBy = ['date' => 'ASC'];
+            break;
+        case 'thumbsup_desc':
+            $orderBy = ['likeCount' => 'DESC'];
+            break;
+        case 'thumbsup_asc':
+            $orderBy = ['likeCount' => 'ASC'];
+            break;
+        case 'thumbsdown_desc':
+            $orderBy = ['dislikeCount' => 'DESC'];
+            break;
+        case 'thumbsdown_asc':
+            $orderBy = ['dislikeCount' => 'ASC'];
+            break;
+        case 'date_desc':
+        default:
+            $orderBy = ['date' => 'DESC'];
+            break;
+    }
+        //$posts = $postRepository->findBy(['category' => $category->getId()], ['id' => 'DESC']); $orderBy
+
+        $posts = $postRepository->findBy(['category' => $category->getId()], $orderBy);
 
         if (empty($posts)) {
             return $this->redirectToRoute('home');
@@ -112,7 +161,8 @@ class HomeController extends AbstractController
 
         return $this->render('home/showcategory.html.twig', [
             'posts' => $posts,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'currentSort' => $sort
         ]);
     }
 
