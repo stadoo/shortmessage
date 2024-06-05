@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<br>
+<div>
+<p>id : {{app.user.id}}</p>
+<p>eMail: {{ app.user.email }}</p>
+{% if is_granted('ROLE_ADMIN') %}
+  <p>Role: 
+  {% for role in app.user.roles %}
+    {{ role }}
+  {% endfor %}</p>
+{% endif %}
+
+<p>Post count: {{ posts|length }}</p>
+
+<h3>My posts</h3>
+{% for post in pagination %}
+
+    {% include 'home/post.html.twig' %}
+
+{% endfor %}
+
+            {{ knp_pagination_render(pagination) }}
+
+
+</div>
+
+
+{% endblock %}

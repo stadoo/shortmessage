@@ -54,6 +54,11 @@
       </ul>
           <ul class="navbar-nav d-fex">
 
+      <span class="navbar-text">
+        {% if app.user %}
+          <a href="{{path('user_profil')}}">{{ app.user.email }}</a>
+        {% endif %}
+        </span>
       <li class="nav-item">
         <a class="nav-link" href="{{ app.user ? path('logout') : path('login') }}">{{app.user ? 'Logout' : 'Login'}}</a>
       </li>
@@ -62,9 +67,7 @@
           <a class="nav-link" href="{{path('register')}}">Register</a>
         </li>
         {% endif %}
-            <span class="navbar-text">
-        {{app.user ? app.user.email}}
-      </span>
+        
     </ul>
 
     </div>
