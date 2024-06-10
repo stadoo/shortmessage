@@ -5,6 +5,15 @@
 {% block body %}
 
 <br>
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success"><h3>{{ message }}</h3></div>
+{% endfor %}
+
+{% for message in app.flashes('failure') %}
+    <div class="alert alert-danger"><h3>{{ message }}</h3></div>
+{% endfor %}
+
+<br>
 
     {{ form_start(editFormEmail) }}
         {{ form_row(editFormEmail.email) }}
@@ -17,6 +26,13 @@
         }) }}
         {{ form_row(editFormPassword.submit) }}
     {{ form_end(editFormPassword) }}
+
+    {{ form_start(editFormRoles) }}
+        {{ form_row(editFormRoles.roles, {
+            label: 'Roles'
+        }) }}
+        {{ form_row(editFormRoles.submit) }}
+    {{ form_end(editFormRoles) }}
 
 
 {% endblock %}

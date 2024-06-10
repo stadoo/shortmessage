@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -46,7 +47,7 @@ class AdminController extends AbstractController
         $user=$em->getRepository(User::class)->find($id);
         if($this->isGranted('ROLE_ADMIN') )
         {
-            $formEmail = $this->createFormBuilder()
+        $formEmail = $this->createFormBuilder()
         ->add('email', EmailType::class,[
             'label' => 'Email',
             'attr' => array('class' => 'form-control','value' => $user->getEmail())
@@ -54,6 +55,7 @@ class AdminController extends AbstractController
             'attr' => array('class' => 'btn btn-outline-danger btn-sm')
         ])
         ->getForm();
+
         $formEmail->handleRequest($request);
         $fromPassword = $this->createFormBuilder()
         ->add('password', PasswordType::class, [
@@ -63,11 +65,26 @@ class AdminController extends AbstractController
             'attr' => array('class' => 'btn btn-outline-danger btn-sm')
         ])
         ->getForm();
+
         $fromPassword->handleRequest($request);
+        $formRoles = $this->createFormBuilder($user)
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Admin' => 'ROLE_ADMIN',
+                    'User' => 'ROLE_USER',
+                    'Manager' => 'ROLE_MANAGER',
+                ],
+                'expanded' => true,
+                'multiple' => true,
+                'label' => 'Roles'
+            ])
+            ->add('submit', SubmitType::class, [
+            'attr' => array('class' => 'btn btn-outline-danger btn-sm')
+            ])
+            ->getForm();
+        $formRoles->handleRequest($request);
         if ($formEmail->isSubmitted() && $formEmail->isValid())
         {
-                $eingabe = $formEmail->getData();
-
                 $user->setEmail($formEmail->get('email')->getData());
 
                 $em->persist($user);
@@ -77,7 +94,7 @@ class AdminController extends AbstractController
                 return $this->redirect($this->generateUrl('home'));
                 
         } elseif($fromPassword->isSubmitted() && $fromPassword->isValid()) {
-            $eingabe = $fromPassword->getData();
+
             $hashedPassword = $this->userPasswordHasher->hashPassword($user, $fromPassword->get('password')->getData());
             $user->setPassword($hashedPassword);
 
@@ -85,10 +102,23 @@ class AdminController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'The User Password has been edited successfully!');
             return $this->redirect($this->generateUrl('home'));
+            
+        } elseif($formRoles->isSubmitted() && $formRoles->isValid()) {
+
+            $roles = $formRoles->get('roles')->getData();
+            $user->setRoles($roles);
+            
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'User roles updated successfully');
+
+            return $this->redirectToRoute('admin_useredit', ['id' => $user->getId()]);
         }
             return $this->render('admin/edit_user.html.twig',[
                 'editFormEmail' => $formEmail->createView(),
                 'editFormPassword' => $fromPassword->createView(),
+                'editFormRoles' => $formRoles->createView(),
                 'post' => $user
             ]);
         } else {
