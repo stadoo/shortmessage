@@ -82,7 +82,7 @@ class PostController extends AbstractController
     public function editpost($id, EntityManagerInterface $em, Request $request): Response
     {   
         $post=$em->getRepository(Post::class)->find($id);
-        if($post->getAuthorid() == $this->getUser()->getId()  || $this->isGranted('ROLE_ADMIN') )
+        if($post->getAuthor() == $this->getUser()  || $this->isGranted('ROLE_ADMIN') )
         {
             $form = $this->createForm(PostEditFormType::class, $post);
             $form->handleRequest($request);
@@ -114,7 +114,7 @@ class PostController extends AbstractController
     public function delete($id, EntityManagerInterface $em)
     {
         $post = $em->getRepository(Post::class)->find($id);
-        if($post->getAuthorid() == $this->getUser()->getId() || $this->isGranted('ROLE_ADMIN') )
+        if($post->getAuthor() == $this->getUser() || $this->isGranted('ROLE_ADMIN') )
         {
             $em->remove($post);
             $em->flush();
@@ -143,7 +143,7 @@ class PostController extends AbstractController
         ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
+        if ($form->isSubmitted() && $form->isValid() && $this->isGranted('ROLE_ADMIN'))
         {
         $eingabe = $form->getData();
 

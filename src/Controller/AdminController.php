@@ -46,11 +46,16 @@ class AdminController extends AbstractController
         $user=$em->getRepository(User::class)->find($id);
         if($this->isGranted('ROLE_ADMIN') )
         {
-            $form = $this->createFormBuilder()
+            $formEmail = $this->createFormBuilder()
         ->add('email', EmailType::class,[
             'label' => 'Email',
             'attr' => array('class' => 'form-control','value' => $user->getEmail())
+        ])->add('submit', SubmitType::class, [
+            'attr' => array('class' => 'btn btn-outline-danger btn-sm')
         ])
+        ->getForm();
+        $formEmail->handleRequest($request);
+        $fromPassword = $this->createFormBuilder()
         ->add('password', PasswordType::class, [
             'attr' => array('class' => 'form-control')
         ])
@@ -58,14 +63,12 @@ class AdminController extends AbstractController
             'attr' => array('class' => 'btn btn-outline-danger btn-sm')
         ])
         ->getForm();
-        $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid())
-            {
-                $eingabe = $form->getData();
+        $fromPassword->handleRequest($request);
+        if ($formEmail->isSubmitted() && $formEmail->isValid())
+        {
+                $eingabe = $formEmail->getData();
 
-                $user->setEmail($form->get('email')->getData());
-                $hashedPassword = $this->userPasswordHasher->hashPassword($user, $form->get('password')->getData());
-                $user->setPassword($hashedPassword);
+                $user->setEmail($formEmail->get('email')->getData());
 
                 $em->persist($user);
                 $em->flush();
@@ -73,9 +76,19 @@ class AdminController extends AbstractController
                 $this->addFlash('success', 'The User has been edited successfully!');
                 return $this->redirect($this->generateUrl('home'));
                 
-            }
+        } elseif($fromPassword->isSubmitted() && $fromPassword->isValid()) {
+            $eingabe = $fromPassword->getData();
+            $hashedPassword = $this->userPasswordHasher->hashPassword($user, $fromPassword->get('password')->getData());
+            $user->setPassword($hashedPassword);
+
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'The User Password has been edited successfully!');
+            return $this->redirect($this->generateUrl('home'));
+        }
             return $this->render('admin/edit_user.html.twig',[
-                'editForm' => $form->createView(),
+                'editFormEmail' => $formEmail->createView(),
+                'editFormPassword' => $fromPassword->createView(),
                 'post' => $user
             ]);
         } else {

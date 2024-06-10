@@ -6,13 +6,17 @@
 
 <br>
 
-    {{ form_start(editForm) }}
-        {{ form_row(editForm.email) }}
-        {{ form_row(editForm.password, {
+    {{ form_start(editFormEmail) }}
+        {{ form_row(editFormEmail.email) }}
+        {{ form_row(editFormEmail.submit) }}
+    {{ form_end(editFormEmail) }}
+
+    {{ form_start(editFormPassword) }}
+        {{ form_row(editFormPassword.password, {
             label: 'Password'
         }) }}
+        {{ form_row(editFormPassword.submit) }}
+    {{ form_end(editFormPassword) }}
 
-        {{ form_row(editForm.submit) }}
-    {{ form_end(editForm) }}
 
 {% endblock %}

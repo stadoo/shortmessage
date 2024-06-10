@@ -51,7 +51,6 @@
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Hier kannst du die Rückgabe verarbeiten, z.B. die Like/Dislike-Anzahl aktualisieren
                     const response = JSON.parse(xhr.responseText);
                     //const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
                     document.getElementById("likes-"+`${postId}`).textContent = response.likes;
