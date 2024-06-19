@@ -1,0 +1,19 @@
+{# templates/post/search.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Results for "{{ query }}"{% endblock %}
+
+{% block body %}
+
+
+<br>
+
+    <h1>Search Results for "{{ query }}"</h1>
+    {% for post in pagination %}
+
+    {% include 'home/post.html.twig' %}
+
+{% endfor %}
+
+            {{ knp_pagination_render(pagination, null) }}
+{% endblock %}

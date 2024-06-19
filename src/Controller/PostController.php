@@ -10,8 +10,10 @@ use App\Form\PostEditFormType;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -159,6 +161,96 @@ class PostController extends AbstractController
         return $this->render('post/newcategory.html.twig', [
             'newPostForm' => $form->createView(),
         ]);
+    }
+
+
+    public function showsearchbar(Request $request):Response
+    {
+        // $form = $this->createFormBuilder(null, [
+        //         'method' => 'GET',
+        //         'csrf_protection' => true,
+        //         'action' => $this->generateUrl('post_search')
+        //     ])
+        //     ->add('query', SearchType::class, [
+        //         'label' => false,
+        //         'attr' => ['placeholder' => 'Search...']
+        //     ])
+        //     ->getForm();
+        
+
+        return $this->render('post/searchbar.html.twig'
+        //, ['searchform' => $form->createView(),]
+    );
+    }
+
+    
+    #[Route('/search', name: 'post_search')]
+    public function search(Request $request, PostRepository $postRepository, PaginatorInterface $paginator): Response
+    {
+        /*
+        $form = $this->createFormBuilder()
+        ->setMethod('GET')
+        ->setAction($this->generateUrl('post_search'))
+        ->add('query', SearchFieldType::class, [
+                'label' => 'Search',
+                'required' => false,
+                'attr' => ['placeholder' => 'Search...']
+
+        ])
+        ->getForm();
+        $form->handleRequest($request);
+
+        $posts = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $query = $form->get('query')->getData();
+
+            if ($query) {
+                $posts = $postRepository->findBySearchQuery($query);
+
+                $pagination = $paginator->paginate(
+                $posts,
+                $request->query->getInt('page', 1),10);
+                $pagination->setTemplate('home/my_pagination.html.twig');
+
+
+                return $this->render('post/searchoverview.html.twig', [
+                    'searchform' => $form->createView(), 
+                    'posts' => $posts,
+                    'pagination' => $pagination
+            ]);
+            }
+            
+        }
+
+        return $this->render('post/searchbar.html.twig', [
+            'searchform' => $form->createView()
+            ]);
+            */
+        
+        $query = $request->query->get('query', '');
+
+        if ($query) {
+            $posts = $postRepository->findBySearchQuery($query);
+            $pagination = $paginator->paginate(
+                $posts,
+                $request->query->getInt('page', 1),10);
+                $pagination->setTemplate('home/my_pagination.html.twig');
+        } else {
+            $posts = [];
+        }
+
+                
+
+
+            return $this->render('post/search_results.html.twig', [
+                    'posts' => $posts,
+                    'query' => $query,
+                    'pagination' => $pagination
+            ]);
+        
+            
+
     }
 
     #[Route('/thumpsup/{id}', name: 'thumpsup')]

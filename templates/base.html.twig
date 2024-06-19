@@ -53,7 +53,7 @@
         {% endif %}
       </ul>
           <ul class="navbar-nav d-fex">
-
+      {{ render(controller('App\\Controller\\PostController::showsearchbar'))}}
       <span class="navbar-text">
         {% if app.user %}
           <a href="{{path('user_profil')}}">{{ app.user.email }}</a>
