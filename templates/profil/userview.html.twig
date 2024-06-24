@@ -30,3 +30,9 @@
 
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'js/js_likedislikeupdate.html.twig' %}
+{% endblock %}

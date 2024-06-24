@@ -33,42 +33,10 @@
 
         
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        function likePost(postId) {
-            sendAjaxRequest('thumpsup', postId);
-
-
-        }
-
-        function dislikePost(postId) {
-            sendAjaxRequest('thumpsdown', postId);
-        }
-
-        function sendAjaxRequest(action, postId) {
-          console.log('Sending ${action} request for ${postId}')
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    //const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
-                    document.getElementById("likes-"+`${postId}`).textContent = response.likes;
-
-                    console.log(response.dislikes)
-                    console.log(`${postId}`)
-                    document.getElementById("dislikes-"+`${postId}`).textContent = response.dislikes;
-                    if(response.status){
-                      document.getElementById("likes-"+`${postId}`).disabled = true;
-                      document.getElementById("dislikes-"+`${postId}`).disabled = true;
-                    }
-                }
-            };
-
-            xhr.open('GET', `/${action}/${postId}`, true);
-            xhr.send();
-        }
-    </script>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'js/js_likedislikeupdate.html.twig' %}
 {% endblock %}

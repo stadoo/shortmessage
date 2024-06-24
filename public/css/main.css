@@ -24,6 +24,10 @@ body {
   padding-left: 0.5rem;
 }
 
+.searchbar {
+  padding: 0;
+}
+
 .nav-sidebar {
   background-color: rgb(33, 37, 41);
   padding: 0;
@@ -110,4 +114,14 @@ body {
 hr {
   background-color: var(--bg-color);
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .nav-sidebar {
+    display: none;
+  }
+
+  .container .row .posts {
+    margin-left: 10px;
+  }
 }

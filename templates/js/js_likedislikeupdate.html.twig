@@ -1,0 +1,95 @@
+    <script>
+        function likePost(postId) {
+            sendAjaxRequest('thumbsup', postId);
+        }
+
+        function dislikePost(postId) {
+            sendAjaxRequest('thumbsdown', postId);
+        }
+
+        function sendAjaxRequest(action, postId) {
+          console.log('Sending ${action} request for ${postId}')
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    document.getElementById("likes-"+`${postId}`).innerHTML = '<i class="bi bi-hand-thumbs-up"></i> ' + response.likes;
+
+                    console.log(response.dislikes)
+                    console.log(`${postId}`)
+                    document.getElementById("dislikes-"+`${postId}`).innerHTML = '<i class="bi bi-hand-thumbs-down"></i> ' + response.dislikes;
+                    if(response.status){
+                      document.getElementById("likes-"+`${postId}`).disabled = true;
+                      document.getElementById("dislikes-"+`${postId}`).disabled = true;
+                    }
+                }
+            };
+
+            xhr.open('GET', `/${action}/${postId}`, true);
+            xhr.send();
+        }
+
+        function updateLikes(postId) {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    document.getElementById("likes-" + postId).innerHTML = '<i class="bi bi-hand-thumbs-up"></i> ' + response.likes;
+                }
+            };
+
+            xhr.open('GET', `/thumbsup/${postId}`, true);
+            xhr.send();
+        }
+
+        function updateDislikes(postId) {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    document.getElementById("dislikes-" + postId).innerHTML = '<i class="bi bi-hand-thumbs-down"></i> ' + response.dislikes;
+                }
+            };
+
+            xhr.open('GET', `/thumbsdown/${postId}`, true);
+            xhr.send();
+        }
+
+        function updateLikeDislikeStatus(postId) {
+          const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    document.getElementById("likes-" + postId).innerHTML = '<i class="bi bi-hand-thumbs-up"></i> ' + response.likes;
+                    document.getElementById("dislikes-" + postId).innerHTML = '<i class="bi bi-hand-thumbs-down"></i> ' + response.dislikes;
+                }
+            };
+
+            xhr.open('GET', `/thumbsstatus/${postId}`, true);
+            xhr.send();
+        }
+
+
+        async function updateAllLikesAndDislikes() {
+            const elements = document.querySelectorAll('[data-post-id]');
+            for (let element of elements) {
+                const postId = element.dataset.postId;
+                if (postId) {
+                    console.log('Updating likes and dislikes for postId:', postId);
+                    updateLikesAndDislikes(postId);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1000ms before next update
+                } else {
+                    console.error('Post ID is undefined for element:', element);
+                }
+            }
+        }
+
+        function updateLikesAndDislikes(postId) {
+            updateLikeDislikeStatus(postId);
+        }
+
+        function startUpdateInterval() {
+            setInterval(updateAllLikesAndDislikes, 20000); 
+        }
+        document.addEventListener('DOMContentLoaded', startUpdateInterval); 
+    </script>

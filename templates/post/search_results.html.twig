@@ -7,7 +7,7 @@
 
 
 <br>
-
+<i class="bi bi-hand-thumbs-down"></i>
     <h1>Search Results for "{{ query }}"</h1>
     {% for post in pagination %}
 
@@ -16,4 +16,10 @@
 {% endfor %}
 
             {{ knp_pagination_render(pagination, null) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'js/js_likedislikeupdate.html.twig' %}
 {% endblock %}

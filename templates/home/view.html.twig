@@ -20,8 +20,8 @@
       <blockquote class="blockquote mb-0">
         <p>{{post.text}}</p>
         <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by {{post.author}} - Category: {{post.category}} - 
-        <button id="likes-{{post.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})">{{post.likecount}}</button> | 
-        <button id="dislikes-{{post.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})">{{post.dislikecount}}</button>
+        <button id="likes-{{post.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"><i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
+        <button id="dislikes-{{post.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})"><i class="bi bi-hand-thumbs-down"></i> {{post.dislikecount}}</button>
         {% if app.user %}{% if app.user.id == post.author.id or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
         </footer>
       </blockquote>
@@ -32,41 +32,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        function likePost(postId) {
-            sendAjaxRequest('thumpsup', postId);
 
-
-        }
-
-        function dislikePost(postId) {
-            sendAjaxRequest('thumpsdown', postId);
-        }
-
-        function sendAjaxRequest(action, postId) {
-          console.log('Sending ${action} request for ${postId}')
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Hier kannst du die Rückgabe verarbeiten, z.B. die Like/Dislike-Anzahl aktualisieren
-                    const response = JSON.parse(xhr.responseText);
-                    //const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
-                    document.getElementById("likes-"+`${postId}`).textContent = response.likes;
-
-                    console.log(response.dislikes)
-                    console.log(`${postId}`)
-                    document.getElementById("dislikes-"+`${postId}`).textContent = response.dislikes;
-                    if(response.status){
-                      document.getElementById("likes-"+`${postId}`).disabled = true;
-                      document.getElementById("dislikes-"+`${postId}`).disabled = true;
-                    }
-                }
-            };
-
-            xhr.open('GET', `/${action}/${postId}`, true);
-            xhr.send();
-        }
-    </script>
+    {% include 'js/js_likedislikeupdate.html.twig' %}
 {% endblock %}
 
 {% endblock %}

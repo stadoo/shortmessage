@@ -253,8 +253,8 @@ class PostController extends AbstractController
 
     }
 
-    #[Route('/thumpsup/{id}', name: 'thumpsup')]
-    public function thumpsup($id, EntityManagerInterface $em) 
+    #[Route('/thumbsup/{id}', name: 'thumbsup')]
+    public function thumbsup($id, EntityManagerInterface $em) 
     {
         $post = $em->getRepository(Post::class)->find($id);
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
@@ -283,8 +283,8 @@ class PostController extends AbstractController
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
     }
 
-    #[Route('/thumpsdown/{id}', name: 'thumpsdown')]
-    public function thumpsdown($id, EntityManagerInterface $em) 
+    #[Route('/thumbsdown/{id}', name: 'thumbsdown')]
+    public function thumbsdown($id, EntityManagerInterface $em) 
         {
         $post = $em->getRepository(Post::class)->find($id);
         $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
@@ -311,6 +311,22 @@ class PostController extends AbstractController
             return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => '1']);
         }
         return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount(), 'status' => $like->getLikestatus()]);
+    }
+    
+    #[Route('/thumbsstatus/{id}', name: 'thumbsstatus')]
+    public function likesdislikestatus($id, EntityManagerInterface $em):Response
+    {
+        $post = $em->getRepository(Post::class)->find($id);
+                $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
+
+        if (!$post) {
+            $this->addFlash('failure', 'ID existiert nicht');
+            return new JsonResponse(['error' => 'ID existiert nicht']);
+        }
+
+        return new JsonResponse(['likes' => $post->getLikeCount(), 'dislikes' => $post->getDislikeCount()]);
+
+
     }
 
         #[Route('/like/{id}/{status}', name: 'like')]
