@@ -1,0 +1,49 @@
+{# templates/profile/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<br>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success"><h3>{{ message }}</h3></div>
+{% endfor %}
+
+{% for message in app.flashes('failure') %}
+    <div class="alert alert-danger"><h3>{{ message }}</h3></div>
+{% endfor %}
+
+    <h1>Edit Profile</h1>
+
+    {{ form_start(formSocialLink) }}
+        <div class="form-group">
+            {{ form_row(formSocialLink.newSocialLink) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(formSocialLink.save) }}
+        </div>
+    {{ form_end(formSocialLink) }}
+
+    <h2>Existing Social Links</h2>
+    <ul>
+        {% for link in user.socialLinks %}
+            <li>
+                <a href="{{ link }}" target="_blank">{{ link }}</a>
+                <a href="{{ path('remove_social_link', {'index': loop.index0}) }}" class="btn btn-danger btn-sm">Remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+        {{ form_start(formEditPassword) }}
+        <div class="form-group">
+            {{ form_row(formEditPassword.password) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(formEditPassword.save) }}
+        </div>
+    {{ form_end(formEditPassword) }}
+{% endblock %}
+
+
+
