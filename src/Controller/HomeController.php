@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\LikesHistory;
 use App\Repository\CategoryRepository;
 use App\Repository\LikesHistoryRepository;
 use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,20 +65,7 @@ class HomeController extends AbstractController
 
     }
 
-    #[Route('/view/{id}', name:'view')]
-    public function view($id, PostRepository $pr): Response 
-    {
-        $post = $pr->find($id);
-        if($post){
-            return $this->render('home/view.html.twig', [
-            'post' => $post
-        ]);
-        } else {
-            $this->addFlash('failure', 'This post does not exist!');
-            return $this->redirect($this->generateUrl('home'));
-        }
-        
-    }
+
 
     public function getlikestatus($postid,LikesHistoryRepository $likesHistoryRepository): Response
     {

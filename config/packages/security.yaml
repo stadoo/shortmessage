@@ -43,6 +43,7 @@ security:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/newcategory, roles: ROLE_ADMIN }
     - { path: ^/newpost, roles: ROLE_USER }
+    - { path: ^/user/profile, roles: ROLE_USER }
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/register, roles: PUBLIC_ACCESS }
 

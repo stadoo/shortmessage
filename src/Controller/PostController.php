@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\LikesHistory;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostEditFormType;
 use App\Form\PostType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -24,6 +26,76 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
+
+    #[Route('/view/{id}', name:'view')]
+    public function view($id, PostRepository $pr, CommentRepository $cmr , Request $request, EntityManagerInterface $em): Response 
+    {
+        $post = $pr->find($id);
+        if($post){
+            $comments = $cmr->findBy(['post' => $post], ['date' => 'DESC']);
+
+            $comment = new Comment();
+            $form = $this->createFormBuilder()
+                ->add('content', TextareaType::class, [
+                'label' => 'Comment',
+            ])
+            ->getForm();
+            $form->handleRequest($request);
+            $eingabe = $form->getData();
+
+            if ($form->isSubmitted() && $form->isValid()) { 
+                $comment->setPost($post);
+                $comment->setAuthor($this->getUser());
+                $comment->setText($eingabe['content']);
+                $comment->setStatus('1');
+                $comment->setDate(new \DateTime());
+                $comment->setLikeCount(0);
+                $comment->setDislikeCount(0);
+
+                $em->persist($comment);
+                $em->flush();
+
+                return $this->redirectToRoute('view', ['id' => $post->getId()]);
+            }
+
+            return $this->render('post/view.html.twig', [
+            'post' => $post,
+            'comments' => $comments,
+            'form' => $form->createView()
+        ]);
+        } else {
+            $this->addFlash('failure', 'This post does not exist!');
+            return $this->redirect($this->generateUrl('home'));
+        }
+        
+    }
+
+    #[Route('/post/comment/delete/{id}', name: 'comment_delete', methods: ['GET'])]
+    public function deleteComment($id, Request $request, EntityManagerInterface $em, Comment $comment): Response
+    {
+
+        $comment = $em->getRepository(Comment::class)->find($id);
+        // CSRF Token validation
+        $token = $request->query->get('token');
+        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $token)) {
+        
+            if($comment->getAuthor() == $this->getUser() || $this->isGranted('ROLE_ADMIN') )
+            {
+                $em->remove($comment);
+                $em->flush();
+
+                $this->addFlash('success', 'Your post has been deleted successfully!');
+            } else {
+                $this->addFlash('failure', 'You are not the owner of this post!');
+            }
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token');
+        }
+
+
+        return $this->redirectToRoute('view', ['id' => $comment->getPost()->getId()]);
+    }
+    
     #[Route('/newpost', name: 'newpost')]
     public function index(EntityManagerInterface $em, Request $request): Response
     {

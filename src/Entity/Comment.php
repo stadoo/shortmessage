@@ -2,29 +2,30 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Config\Resource\SelfCheckingResourceChecker;
 
-#[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy:'comments')]
+    #[ORM\JoinColumn(nullable:false)]
+    private ?Post $post = null;
+
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    
 
-    #[ORM\Column(length: 2000)]
+    #[ORM\Column(length: 255)]
     private ?string $text = null;
 
     #[ORM\Column]
@@ -33,9 +34,6 @@ class Post
      #[ORM\Column(type:'datetime', nullable:false)]
     private $date;
 
-     #[ORM\ManyToOne(inversedBy: 'posts')]
-     #[ORM\JoinColumn(nullable: false)]
-     private ?Category $category = null;
 
      #[ORM\Column]
      private ?int $likeCount = null;
@@ -43,19 +41,21 @@ class Post
      #[ORM\Column]
      private ?int $dislikeCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]
-
-    private Collection $comments;
-
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
-    
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
+
+        return $this;
     }
 
     public function getAuthor(): ?User
@@ -66,18 +66,6 @@ class Post
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -118,18 +106,6 @@ class Post
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
     public function getLikeCount(): ?int
     {
         return $this->likeCount;
@@ -164,33 +140,6 @@ class Post
     public function incrementDislikeCount(): self
     {
         $this->dislikeCount++;
-
-        return $this;
-    }
-
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // Set the owning side to null (unless already changed)
-            if ($comment->getPost() === $this) {
-                $comment->setPost(null);
-            }
-        }
 
         return $this;
     }

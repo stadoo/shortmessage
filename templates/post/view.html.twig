@@ -28,6 +28,28 @@
     </div>
   </div>
   <br>
+
+    <h3>Create a Comment</h3>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">Send</button>
+    {{ form_end(form) }}
+
+<hr>
+  <h3>Comments</h3>
+    {% for comment in comments %}
+        <div>
+            <p>{{ comment.text }}</p>
+            <small>{{ comment.date|date('Y-m-d H:i') }} by {{ comment.author }}
+              <button id="likes-{{comment.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : comment.id}))}} onclick="likePost({{comment.id}})"><i class="bi bi-hand-thumbs-up"></i> {{comment.likecount}}</button> | 
+              <button id="dislikes-{{comment.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : comment.id}))}} onclick="dislikePost({{comment.id}})"><i class="bi bi-hand-thumbs-down"></i> {{comment.dislikecount}}</button>
+              <a href="{{ path('comment_delete', {'id': comment.id, 'token': csrf_token('delete' ~ comment.id)}) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a>
+
+            </small>
+        </div>
+    {% endfor %}
+
+
         
 
 {% block javascripts %}

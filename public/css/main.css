@@ -102,6 +102,10 @@ body {
   padding-bottom: 1rem;
 }
 
+footer.blockquote-footer {
+  font-size: 0.8rem;
+}
+
 .container.register {
   text-align: center;
 }
@@ -114,6 +118,25 @@ body {
 hr {
   background-color: var(--bg-color);
   margin: 0;
+}
+
+/* User profile */
+
+.bi-twitter-x,
+.bi-facebook,
+.bi-linkedin {
+  font-size: 100px;
+  margin: 1rem;
+}
+.bi-facebook {
+  color: #3b5998;
+}
+
+.bi-linkedin {
+  color: #006097;
+}
+.bi-twitter-x {
+  color: #282424;
 }
 
 @media (max-width: 768px) {
