@@ -38,6 +38,11 @@ class PostController extends AbstractController
             $form = $this->createFormBuilder()
                 ->add('content', TextareaType::class, [
                 'label' => 'Comment',
+                'label_attr' => ['class' => 'form-label'],
+                'attr' => ['class' => 'form-control',
+                            'placeholder'=> 'Comment',
+                            'row' => 3
+                            ]
             ])
             ->getForm();
             $form->handleRequest($request);

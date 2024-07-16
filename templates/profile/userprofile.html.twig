@@ -4,17 +4,22 @@
 
 {% block body %}
 <br>
-<div>
-<p>id : {{app.user.id}}</p>
-<p>eMail: {{ app.user.email }}</p>
-{% if is_granted('ROLE_ADMIN') %}
-  <p>Role: 
-  {% for role in app.user.roles %}
-    {{ role }}
-  {% endfor %}</p>
-{% endif %}
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <strong>eMail: {{ app.user.email }}</strong>
+            <p>id : {{app.user.id}}</p>
+            {% if is_granted('ROLE_ADMIN') %}
+                <p>Role: 
+                {% for role in app.user.roles %}
+                {{ role }}
+                {% endfor %}</p>
+                {% endif %}
+            <p>Post count: {{ posts|length }}</p>
 
-        {% for link in app.user.socialLinks %}
+        </div>
+        <div class="col">
+                {% for link in app.user.socialLinks %}
                 {% if 'twitter.com' in link or 'x.com' in link %}
                     <a href="{{ link }}" target="_blank" class="bi bi-twitter-x" alt="Twitter-X"></a>
                 {% elseif 'facebook.com' in link %}
@@ -25,9 +30,19 @@
                     <a href="{{ link }}" target="_blank">{{ link }}</a>
                 {% endif %}
         {% endfor %}
+        </div>
+    </div>
+    <a href="{{path('user_edit')}}">Edit Profile</a>
 
-<a href="{{path('user_edit')}}">Edit Profile</a>
-<p>Post count: {{ posts|length }}</p>
+    </div>
+<br>
+
+
+
+
+
+
+
 
 <h3>My posts</h3>
 {% for post in pagination %}

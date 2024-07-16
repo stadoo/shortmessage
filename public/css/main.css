@@ -89,6 +89,7 @@ body {
   border-style: none;
   border-radius: 0%;
   padding-top: 1rem;
+  padding-bottom: 0;
 }
 
 .card .card-header a {
@@ -100,6 +101,7 @@ body {
 .card .card-body {
   background-color: var(--bg-color);
   padding-bottom: 1rem;
+  padding-top: 0;
 }
 
 footer.blockquote-footer {
@@ -120,12 +122,25 @@ hr {
   margin: 0;
 }
 
+.comment {
+  padding: 1rem 0 0 2rem;
+}
+.comment .row {
+  padding: 0 0 1rem 0;
+}
+
+.comment .content {
+  padding: 0 0 0 2rem;
+  border-left: 1px solid;
+  margin-bottom: 1rem;
+}
+
 /* User profile */
 
 .bi-twitter-x,
 .bi-facebook,
 .bi-linkedin {
-  font-size: 100px;
+  font-size: 50px;
   margin: 1rem;
 }
 .bi-facebook {
