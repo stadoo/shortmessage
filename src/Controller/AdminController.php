@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -124,5 +125,34 @@ class AdminController extends AbstractController
         } else {
             return $this->redirect($this->generateUrl('home'));
         }
+    }
+
+    #[Route('/admoin/user/remove/{id}', name:'admin_userremove')]
+    public function removeSocialLink(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        $user = $em->getRepository(User::class)->find($id);
+        //$posts = $em->getRepository(Post::class)->findBy(['author'=> $id]);
+        
+
+        // CSRF Token validation
+        $token = $request->query->get('token');
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $token)) {
+        
+            if( $this->isGranted('ROLE_ADMIN') )
+            {
+                $deletePosts = $em->createQuery('delete from App\Entity\Post p where p.author = '.$id);
+                $deletePosts->execute();
+                $em->remove($user);
+                $em->flush();
+
+                $this->addFlash('success', 'The user '.$id.' has been deleted successfully!');
+            } else {
+                $this->addFlash('failure', 'You has to be admin to delete the user!');
+            }
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token');
+        }
+
+        return $this->redirectToRoute('admin_userlist');
     }
 }
