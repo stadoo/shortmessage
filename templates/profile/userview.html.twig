@@ -14,7 +14,7 @@
   {% endfor %}</p>
 {% endif %}
 
-        {% for link in app.user.socialLinks %}
+        {% for link in user.socialLinks %}
                 {% if 'twitter.com' in link or 'x.com' in link %}
                     <a href="{{ link }}" target="_blank" class="bi bi-twitter-x" alt="Twitter-X"></a>
                 {% elseif 'facebook.com' in link %}
