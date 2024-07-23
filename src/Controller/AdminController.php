@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -127,8 +129,8 @@ class AdminController extends AbstractController
         }
     }
 
-    #[Route('/admoin/user/remove/{id}', name:'admin_userremove')]
-    public function removeSocialLink(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/admin/user/remove/{id}', name:'admin_userremove')]
+    public function removeUser(int $id, Request $request, EntityManagerInterface $em): Response
     {
         $user = $em->getRepository(User::class)->find($id);
         //$posts = $em->getRepository(Post::class)->findBy(['author'=> $id]);
@@ -140,7 +142,12 @@ class AdminController extends AbstractController
         
             if( $this->isGranted('ROLE_ADMIN') )
             {
-                $deletePosts = $em->createQuery('delete from App\Entity\Post p where p.author = '.$id);
+                $deleteComments = $em->createQuery('DELETE FROM App\Entity\Comment c WHERE c.author = :authorId');
+                $deleteComments->setParameter('authorId', $id);
+                $deleteComments->execute();
+
+                $deletePosts = $em->createQuery('DELETE FROM App\Entity\Post p WHERE p.author = :authorId');
+                $deleteComments->setParameter('authorId', $id);
                 $deletePosts->execute();
                 $em->remove($user);
                 $em->flush();
@@ -155,4 +162,89 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_userlist');
     }
+
+
+    #[Route('/admin/newcategory', name: 'newcategory')]
+    public function newcategory(EntityManagerInterface $em, Request $request): Response
+    {      
+
+        $categorys = $em->getRepository(Category::class)->findBy(array(),array('id'=>'ASC'));
+
+
+        $category = new Category();
+        $form = $this->createFormBuilder()
+        ->add('name', TextType::class,[
+            'label' => 'Category name',
+            'attr' => array('class' => 'form-control')
+        ])
+        ->add('save', SubmitType::class, [
+            'attr' => array('class' => 'btn btn-outline-danger btn-sm')
+        ])
+        ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $this->isGranted('ROLE_ADMIN'))
+        {
+        $eingabe = $form->getData();
+
+        $category->setName($eingabe['name']);
+
+        $em->persist($category);
+        $em->flush();
+
+        $this->addFlash('success', 'New Category has been created successfully!');
+        return $this->redirect($this->generateUrl('home'));
+        }
+
+        return $this->render('admin/newcategory.html.twig', [
+            'newPostForm' => $form->createView(),
+            'categorys' => $categorys,
+        ]);
+    }
+
+    #[Route('/admin/category/edit/{id}', name:'admin_categoryedit')]
+    public function editCategory(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        $category = $em->getRepository(Category::class)->find($id);        
+
+        // CSRF Token validation
+        $token = $request->query->get('token');
+        if($this->isGranted('ROLE_ADMIN') )
+        {
+            $form = $this->createFormBuilder()
+                ->add('name', TextType::class,[
+            'label' => 'Category Name',
+            'attr' => array('class' => 'form-control','value' => $category->getName())
+                ])
+                ->add('save', SubmitType::class, [
+            'attr' => array('class' => 'btn btn-outline-danger btn-sm')
+            ])
+            ->getForm();
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $eingabe = $form->getData();
+
+                $category->setName($form->get('name')->getData());
+
+
+                $em->persist($category);
+                $em->flush();
+
+                $this->addFlash('success', 'category has been edited successfully!');
+                return $this->redirect($this->generateUrl('newcategory'));
+                
+            }
+            return $this->render('admin/edit_category.html.twig',[
+                'editForm' => $form->createView(),
+                'category' => $category
+            ]);
+        } else {
+            return $this->redirect($this->generateUrl('newcategory'));
+        }
+
+        return $this->redirectToRoute('newcategory');
+    }
+
+
 }

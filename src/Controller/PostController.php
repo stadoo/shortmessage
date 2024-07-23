@@ -207,38 +207,7 @@ class PostController extends AbstractController
 
     
 
-    #[Route('/newcategory', name: 'newcategory')]
-    public function newcategory(EntityManagerInterface $em, Request $request): Response
-    {      
-        $category = new Category();
-        $form = $this->createFormBuilder()
-        ->add('name', TextType::class,[
-            'label' => 'Category name',
-            'attr' => array('class' => 'form-control')
-        ])
-        ->add('post', SubmitType::class, [
-            'attr' => array('class' => 'btn btn-outline-danger btn-sm')
-        ])
-        ->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $this->isGranted('ROLE_ADMIN'))
-        {
-        $eingabe = $form->getData();
-
-        $category->setName($eingabe['name']);
-
-        $em->persist($category);
-        $em->flush();
-
-        $this->addFlash('success', 'New Category has been created successfully!');
-        return $this->redirect($this->generateUrl('home'));
-        }
-
-        return $this->render('post/newcategory.html.twig', [
-            'newPostForm' => $form->createView(),
-        ]);
-    }
+    
 
 
     public function showsearchbar(Request $request):Response
