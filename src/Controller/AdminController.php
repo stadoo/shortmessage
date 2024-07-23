@@ -147,8 +147,9 @@ class AdminController extends AbstractController
                 $deleteComments->execute();
 
                 $deletePosts = $em->createQuery('DELETE FROM App\Entity\Post p WHERE p.author = :authorId');
-                $deleteComments->setParameter('authorId', $id);
+                $deletePosts->setParameter('authorId', $id);
                 $deletePosts->execute();
+                
                 $em->remove($user);
                 $em->flush();
 
