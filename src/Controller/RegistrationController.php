@@ -22,6 +22,15 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //check for existing user to make first user to admin
+            $existingUsers = $entityManager->getRepository(User::class)->count([]);
+
+            if($existingUsers === 0) {
+                $user->setRoles(['ROLE_ADMIN']);
+            } else {
+                $user->setRoles(['ROLE_USER']);
+            };
+
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(

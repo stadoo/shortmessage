@@ -135,11 +135,24 @@ hr {
   margin-bottom: 1rem;
 }
 
+/* sharebox */
+#modal-share {
+  width: 50%;
+}
+
+.list-unstyled {
+  text-align: center;
+}
+
+.list-unstyled li {
+  display: inline;
+}
 /* User profile */
 
 .bi-twitter-x,
 .bi-facebook,
-.bi-linkedin {
+.bi-linkedin,
+.bi-whatsapp {
   font-size: 50px;
   margin: 1rem;
 }
@@ -152,6 +165,10 @@ hr {
 }
 .bi-twitter-x {
   color: #282424;
+}
+
+.bi-whatsapp {
+  color: #64d448;
 }
 
 @media (max-width: 768px) {

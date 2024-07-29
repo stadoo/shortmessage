@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[Assert\Callback('App\Entity\User', 'validateSocialLinks')]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -40,6 +39,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type:'json', nullable: true)]
     #[Assert\Count(max:3, maxMessage:'You cannot specify more than 3 social links.')]
+    #[Assert\Callback([User::class, 'validateSocialLinks'])]
+
     private $socialLinks = [];
 
     //for password-reset
@@ -52,7 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->socialLinks = new ArrayCollection();
+        //$this->socialLinks = new ArrayCollection();
+        $this->socialLinks = [];
+
     }
     
     public function getId(): ?int
@@ -152,6 +155,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public static function validateSocialLinks(array $socialLinks, ExecutionContextInterface $context): void
     {
+        $socialLinks = is_array($socialLinks) ? $socialLinks : [];
+
         foreach ($socialLinks as $link) {
             if (!preg_match('/(twitter\.com|x\.com|facebook\.com|linkedin\.com)/', $link)) {
                 $context->buildViolation('Links must be from Twitter, Facebook, or Linkedin.')
