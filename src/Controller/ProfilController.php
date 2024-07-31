@@ -52,13 +52,16 @@ class ProfilController extends AbstractController
         10 /*limit per page*/);
         $pagination->setTemplate('home/my_pagination.html.twig');
 
-
-    return $this->render('profile/userview.html.twig', [
-      'user'=>$user,
-      'posts'=>$posts,
-      'pagination' => $pagination,
-
-  ]);
+    if($user){
+        return $this->render('profile/userview.html.twig', [
+            'user'=>$user,
+            'posts'=>$posts,
+            'pagination' => $pagination,
+        ]);
+    } else {
+        $this->addFlash('failure', 'This user does not exist!');
+            return $this->redirect($this->generateUrl('home'));
+    }
   }
 
     #[Route('/user/profile/edit',name:'user_edit')]
