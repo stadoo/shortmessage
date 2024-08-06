@@ -6,7 +6,7 @@
 <br>
 <div>
 <p>id : {{user.id}}</p>
-<p>eMail: {{ user.email }}</p>
+<p>Username: {{ user.username }}</p>
 {% if is_granted('ROLE_ADMIN') %}
   <p>Role: 
   {% for role in user.roles %}

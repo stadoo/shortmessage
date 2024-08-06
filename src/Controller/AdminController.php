@@ -194,7 +194,7 @@ class AdminController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'New Category has been created successfully!');
-        return $this->redirect($this->generateUrl('home'));
+        return $this->redirect($this->generateUrl('newcategory'));
         }
 
         return $this->render('admin/newcategory.html.twig', [

@@ -7,7 +7,8 @@
 <div class="container text-center">
     <div class="row">
         <div class="col">
-            <strong>eMail: {{ app.user.email }}</strong>
+            <strong>Username: {{ app.user.username }}</strong>
+            <p>eMail: {{ app.user.email }}</p>
             <p>id : {{app.user.id}}</p>
             {% if is_granted('ROLE_ADMIN') %}
                 <p>Role: 

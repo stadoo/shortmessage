@@ -1,11 +1,11 @@
   <div class="card">
     <div class="card-header">
-      <a href="{{path('view',{ 'id' : post.id })}}">{{post.name}} -{{post.id}}</a>
+      <a href="{{path('view',{ 'id' : post.id })}}">{{post.name}}</a>
     </div>
     <div class="card-body" id="{{ post.id }}" data-post-id="{{ post.id }}">
       <blockquote class="blockquote mb-0">
         <p>{{ post.text|length > 255 ? post.text|slice(0, 255) ~ '...' : post.text  }}</p>
-        <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author}}</a> - Comments {{post.comments|length}} - Category: {{post.category}} - 
+        <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - Comments {{post.comments|length}} - Category: {{post.category}} - 
         <button id="share-button-{{ post.id }}" class="btn btn-secondary bi bi-share-fill"></button> - 
         <button id="likes-{{post.id}}" class="btn like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"> <i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
         <button id="dislikes-{{post.id}}" class="btn dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})"> <i class="bi bi-hand-thumbs-down"></i> {{post.dislikecount}}</button>

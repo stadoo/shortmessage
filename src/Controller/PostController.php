@@ -147,7 +147,8 @@ class PostController extends AbstractController
         $em->flush();
         //$this->addFlash('erfolg', 'Your message has been posted successfully!');
         ///return $this->redirect($this->generateUrl('home'));
-                return $this->redirect($request->getUri());
+        return $this->redirectToRoute('view', ['id' => $newPost->getId()]);
+
 
         }
 

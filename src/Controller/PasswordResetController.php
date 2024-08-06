@@ -85,7 +85,8 @@ class PasswordResetController extends AbstractController
             'label' => 'New Password',
             'attr' => array('class' => 'form-control')
         ])
-        ->add('Reset Password', SubmitType::class, [
+        ->add('request', SubmitType::class, [
+            'label' => 'Reset Password',
             'attr' => array('class' => 'btn btn-outline-danger btn-sm')
         ])
         ->getForm();

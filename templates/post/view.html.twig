@@ -14,12 +14,12 @@
 
   <div class="card">
     <div class="card-header">
-      <a href="{{path('view',{ 'id' : post.id })}}">{{post.name}} -{{post.id}}</a>
+      <a href="{{path('view',{ 'id' : post.id })}}">{{post.name}}</a>
     </div>
     <div class="card-body" id="{{ post.id }}">
       <blockquote class="blockquote mb-0">
         <p>{{post.text}}</p>
-        <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by {{post.author}} - Category: {{post.category}} - 
+        <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - Category: {{post.category}} - 
         <button id="share-button-{{ post.id }}" class="btn btn-secondary bi bi-share-fill"></button> - 
 
         <button id="likes-{{post.id}}" class="btn like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"><i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
@@ -73,7 +73,7 @@
     {% for comment in comments %}
         <div class="content">
             <p>{{ comment.text }}</p>
-            <small>{{ comment.date|date('Y-m-d H:i') }} by {{ comment.author }}
+            <small>{{ comment.date|date('Y-m-d H:i') }} by <a href="{{path('user_view',{ 'id' : comment.author.id})}}">{{ comment.author.username }}</a>
               {#
               <button id="likes-{{comment.id}}" class="like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : comment.id}))}} onclick="likePost({{comment.id}})"><i class="bi bi-hand-thumbs-up"></i> {{comment.likecount}}</button> | 
               <button id="dislikes-{{comment.id}}" class="dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : comment.id}))}} onclick="dislikePost({{comment.id}})"><i class="bi bi-hand-thumbs-down"></i> {{comment.dislikecount}}</button>

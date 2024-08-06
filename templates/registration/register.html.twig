@@ -9,7 +9,7 @@
 
     {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm, { 'attr' : {class:'test'}}) }}
+    {{ form_start(registrationForm, { 'attr' : {class:'registration'}}) }}
 
     <div class="mb-3 row">
         <label for="inputEmail" class="col-sm-2 col-form-label">{{ field_label(registrationForm.email) }}</label>
@@ -19,6 +19,17 @@
             class="form-control" 
             id="inputEmail" 
             value="{{ field_value(registrationForm.email) }}">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="inputUsername" class="col-sm-2 col-form-label">{{ field_label(registrationForm.username) }}</label>
+        <div class="col-sm-10">
+            <input type="text" 
+            name="{{ field_name(registrationForm.username) }}"
+            class="form-control" 
+            id="inputUsername" 
+            value="{{ field_value(registrationForm.username) }}">
         </div>
     </div>
 

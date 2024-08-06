@@ -60,7 +60,7 @@
       {{ render(controller('App\\Controller\\PostController::showsearchbar'))}}
       <span class="navbar-text">
         {% if app.user %}
-          <a href="{{path('user_profile')}}">{{ app.user.email }}</a>
+          <a href="{{path('user_profile')}}">{{ app.user.username }}</a>
         {% endif %}
         </span>
       <li class="nav-item">
