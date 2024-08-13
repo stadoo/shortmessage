@@ -7,11 +7,13 @@
 
 body {
   background-color: var(--bg-color);
+  overflow-x: hidden;
 }
 
 .container {
   padding: 0 0 0 0;
   max-width: 100%;
+  overflow-x: hidden;
 }
 .navbar {
   justify-content: space-between;
@@ -38,8 +40,24 @@ body {
   z-index: 1;
   display: block;
   height: 100%;
-  width: 200px;
+  width: 250px;
   margin-top: 50px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(33, 37, 41) #f1f1f1;
+  padding-bottom: 50px;
+}
+
+.nav-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.nav-sidebar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.nav-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgb(33, 37, 41);
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
 }
 
 .nav-sidebar a {
@@ -73,7 +91,7 @@ body {
 
 .container .row .posts {
   background: var(--bg-color);
-  margin-left: 200px;
+  margin-left: 250px;
   margin-top: 50px;
 }
 

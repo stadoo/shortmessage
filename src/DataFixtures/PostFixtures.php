@@ -45,7 +45,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $newPost->setDate($faker->dateTimeBetween('-30 days', 'now'));
             $newPost->setLikeCount(0);
             $newPost->setDislikeCount(0);
-            $categoryId = $faker->randomElement([1, 2, 3]);
+            $categories = $manager->getRepository(Category::class)->findAll();
+            $categoryId = $faker->randomElement($categories);
             $category = $manager->getRepository(Category::class)->find($categoryId);
             if ($category) {
                 $newPost->setCategory($category);

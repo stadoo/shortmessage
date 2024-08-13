@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Shortmessage!{% endblock %}
+{% block title %}Shortmessage! - {{post.name}}{% endblock %}
 
 {% block body %}
 <br>
@@ -20,7 +20,7 @@
       <blockquote class="blockquote mb-0">
         <p>{{post.text}}</p>
         <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - Category: {{post.category}} - 
-        <button id="share-button-{{ post.id }}" class="btn btn-secondary bi bi-share-fill"></button> - 
+        <button id="share-button-{{ post.id }}" data-url="{{absolute_url(path('view',{ 'id' : post.id }))}}" class="btn btn-secondary bi bi-share-fill"></button> - 
 
         <button id="likes-{{post.id}}" class="btn like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"><i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
         <button id="dislikes-{{post.id}}" class="btn dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})"><i class="bi bi-hand-thumbs-down"></i> {{post.dislikecount}}</button>

@@ -12,9 +12,10 @@ $(document).ready(function () {
     var network = $(this).data("network");
     var postId = $(this).closest(".modal").attr("id").split("-")[2];
     var url = "";
-    var postUrl = window.location.href + "/view/" + postId;
-    var postTitle = $("h1").text();
-
+    var postUrl = $("#share-button-" + postId).data("url");
+    var postTitle = $(".card-header a").text().trim();
+    var postText = $(".blockquote p").text().trim();
+    console.log(postText);
     switch (network) {
       case "facebook":
         url =

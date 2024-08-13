@@ -30,8 +30,10 @@ class PostRepository extends ServiceEntityRepository
             ->leftJoin('p.author', 'a') // join with user a to search for email
             ->where('p.name LIKE :query')
             ->orWhere('p.text LIKE :query')
-            ->orWhere('a.email LIKE :query') 
+            //->orWhere('a.email LIKE :query') 
+            ->orWhere('a.username LIKE :query')
             ->setParameter('query', '%' . $query . '%')
+            ->orderBy('p.date', 'DESC')
             ->getQuery()
             ->getResult();
     }
