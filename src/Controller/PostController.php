@@ -364,7 +364,7 @@ class PostController extends AbstractController
     public function likesdislikestatus($id, EntityManagerInterface $em):Response
     {
         $post = $em->getRepository(Post::class)->find($id);
-                $like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
+                //$like = $em->getRepository(LikesHistory::class)->findOneBy(['uid' => $this->getUser()->getId(), 'postid' => $id]);
 
         if (!$post) {
             $this->addFlash('failure', 'ID existiert nicht');

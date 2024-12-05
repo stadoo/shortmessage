@@ -1,29 +1,34 @@
-  <div class="card">
+  <div class="card shadow-sm rounded">
     <div class="card-header">
       <a href="{{path('view',{ 'id' : post.id })}}">{{post.name}}</a>
     </div>
     <div class="card-body" id="{{ post.id }}" data-post-id="{{ post.id }}">
       <blockquote class="blockquote mb-0">
         <p>{{ post.text|length > 255 ? post.text|slice(0, 255) ~ '...' : post.text  }}</p>
-        <footer class="blockquote-footer">{{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - Comments {{post.comments|length}} - Category: {{post.category}} - 
-        <button id="share-button-{{ post.id }}" data-url="{{absolute_url(path('view',{ 'id' : post.id }))}}" class="btn btn-secondary bi bi-share-fill"></button> - 
-        <button id="likes-{{post.id}}" class="btn like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"> <i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
-        <button id="dislikes-{{post.id}}" class="btn dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})"> <i class="bi bi-hand-thumbs-down"></i> {{post.dislikecount}}</button>
-        {% if app.user %}{% if app.user.id == post.author.id or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
+        <footer class="blockquote-footer"><i class="bi bi-clock"></i> {{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - <i class="bi bi-chat"></i>
+ {{post.comments|length}} Comments - Category: <a href="{{path('showcategory', {'idOrSlug' : post.category|replace({' ': '-'})|lower }) }}">{{ post.category }}</a> {% if app.user %}{% if app.user.id == post.author.id or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
         </footer>
-
       </blockquote>
     </div>
+    <div class="card-footer">
+    <div class="row justify-content-between">
+        <div class="col"><button id="likes-{{post.id}}" class="btn like-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="likePost({{post.id}})"> <i class="bi bi-hand-thumbs-up"></i> {{post.likecount}}</button> | 
+        <button id="dislikes-{{post.id}}" class="btn dislike-btn" {{ render(controller('App\\Controller\\HomeController::getlikestatus', {'postid' : post.id}))}} onclick="dislikePost({{post.id}})"> <i class="bi bi-hand-thumbs-down"></i> {{post.dislikecount}}</button></div>
+        <div class="col"></div>
+        <div class="col text-end"><button id="share-button-{{ post.id }}" data-url="{{absolute_url(path('view',{ 'id' : post.id }))}}" class="btn btn-secondary bi bi-share-fill"></button></div>
+    </div>
+         
+        </div>
     <div id="popup" popover>
-    <div class="modal-body">
-                    <ul class="list-unstyled">
-                        <li><a data-url="{{path('view',{ 'id' : post.id })}}" href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="facebook"><i class="bi bi-facebook"></i></a></li>
-                        <li><a data-url="{{path('view',{ 'id' : post.id })}}" href="#" id="share-link" class="share-link" data-network="whatsapp"><i class="bi bi-whatsapp"></i></a></li>
-                        <li><a href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="twitter"><i class="bi bi-twitter-x"></i></a></li>
-                        <li><a href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="linkedin"><i class="bi bi-linkedin"></i></a></li>
-                    </ul>
-                </div>
-                </div>
+      <div class="modal-body">
+          <ul class="list-unstyled">
+            <li><a data-url="{{path('view',{ 'id' : post.id })}}" href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="facebook"><i class="bi bi-facebook"></i></a></li>
+            <li><a data-url="{{path('view',{ 'id' : post.id })}}" href="#" id="share-link" class="share-link" data-network="whatsapp"><i class="bi bi-whatsapp"></i></a></li>
+            <li><a href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="twitter"><i class="bi bi-twitter-x"></i></a></li>
+            <li><a href="{{path('view',{ 'id' : post.id })}}" class="share-link" data-network="linkedin"><i class="bi bi-linkedin"></i></a></li>
+          </ul>
+        </div>
+    </div>
 
     <div class="modal" id="share-modal-{{ post.id }}" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -49,5 +54,4 @@
     </div>
 
 
-    <hr>
   </div>

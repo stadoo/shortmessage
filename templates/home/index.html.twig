@@ -12,16 +12,22 @@
     <div class="alert alert-danger"><h3>{{ message }}</h3></div>
 {% endfor %}
 
+<div class="d-flex mb-2">
+    <div class="p-2">
+        <h2>Latest Posts</h2>
+    </div>
+    <div class="ms-auto p-2">
     <form method="get" action="{{ path('home') }}">
-        <select name="sort" onchange="this.form.submit()">
+        <select class="form-select" name="sort" onchange="this.form.submit()">
             <option value="date_desc" {% if currentSort == 'date_desc' %}selected{% endif %}>Date descending</option>
             <option value="date_asc" {% if currentSort == 'date_asc' %}selected{% endif %}>Date ascending</option>
             <option value="thumbsup_desc" {% if currentSort == 'thumbsup_desc' %}selected{% endif %}>Thumpsup descending</option>
             <option value="thumbsup_asc" {% if currentSort == 'thumbsup_asc' %}selected{% endif %}>Thumpsup ascending</option>
             <option value="thumbsdown_desc" {% if currentSort == 'thumbsdown_desc' %}selected{% endif %}>Thumpsdown descending</option>
             <option value="thumbsdown_asc" {% if currentSort == 'thumbsdown_asc' %}selected{% endif %}>Thumpsdown ascending</option>
-        </select>
-    </form>
+        </select>        
+    </form></div></div>
+
 
 {% for post in pagination %}
 

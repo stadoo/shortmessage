@@ -1,4 +1,7 @@
 
 <form class="d-flex" action="{{ path('post_search') }}" method="get">
-    <input class="form-control me-2" type="search" name="query" placeholder="Search..." value="{{ app.request.query.get('query') }}">
+  <div class="form-group">
+    <span class="search"><i class="fa fa-search" aria-hidden="true"></i></span>
+    <input class="form-control me-2 searchbar" type="search" name="query" placeholder="Search..." value="{{ app.request.query.get('query') }}">
+</div>
 </form>
