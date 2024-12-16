@@ -6,7 +6,7 @@
       <blockquote class="blockquote mb-0">
         <p>{{ post.text|length > 255 ? post.text|slice(0, 255) ~ '...' : post.text  }}</p>
         <footer class="blockquote-footer"><i class="bi bi-clock"></i> {{post.date |date('d-m-Y H:i:s')}} by <a href="{{path('user_view',{ 'id' : post.author.id})}}">{{post.author.username}}</a> - <i class="bi bi-chat"></i>
- {{post.comments|length}} Comments - Category: <a href="{{path('showcategory', {'idOrSlug' : post.category|replace({' ': '-'})|lower }) }}">{{ post.category }}</a> {% if app.user %}{% if app.user.id == post.author.id or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
+ {{post.comments|length}} Comments - Category: <a href="{{path('showcategory', {'idOrSlug' : post.category|replace({' ': '-'})|lower }) }}">{{ post.category }}</a> - {% if app.user %}{% if app.user.id == post.author.id or is_granted('ROLE_ADMIN') %}<a href="{{path('editpost',{ 'id' : post.id })}}">Edit</a> - <a href="{{path('delete',{ 'id' : post.id })}}">Delete</a>{% endif %}{% endif %}
         </footer>
       </blockquote>
     </div>

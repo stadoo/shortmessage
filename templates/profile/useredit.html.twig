@@ -19,12 +19,38 @@
 
     <h1>Edit Profile</h1>
 
-    {{ form_start(formSocialLink) }}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="true">Social Links</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab" aria-controls="password" aria-selected="false">Password</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="social" role="tabpanel" aria-labelledby="social-tab">
+  {{ form_start(formSocialLink) }}
+<br>
         <div class="form-group">
-            {{ form_row(formSocialLink.newSocialLink) }}
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="" class="form-label" >New Social Link</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="{{ field_name(formSocialLink.newSocialLink)}}" 
+                class="form-control me-2"
+                value="{{ field_value(formSocialLink.newSocialLink)}}"
+                placeholder="https://" required>
+                </div>
+                <div class="col-auto">
+                    <span id="passwordHelpInline" class="form-text">
+                        Facebook, Twitter, X, Xing are Linkedin are allowd.
+                    </span>
+                </div>
+            </div>
         </div>
         <div class="form-group">
-            {{ form_row(formSocialLink.save) }}
+            <button type="submit" class="btn" id="{{ field_name(formSocialLink.save) }}" name="{{ field_name(formSocialLink.save) }}"> Save</button>
         </div>
     {{ form_end(formSocialLink) }}
 
@@ -37,8 +63,11 @@
             </li>
         {% endfor %}
     </ul>
-
-        {{ form_start(formEditPassword) }}
+  
+  
+  </div>
+  <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+    {{ form_start(formEditPassword) }}
         <div class="form-group">
             {{ form_row(formEditPassword.password) }}
         </div>
@@ -46,6 +75,16 @@
             {{ form_row(formEditPassword.save) }}
         </div>
     {{ form_end(formEditPassword) }}
+  </div>
+</div>
+
+    
+
+        
+
+
+
+
 {% endblock %}
 
 
