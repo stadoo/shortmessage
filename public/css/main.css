@@ -207,6 +207,15 @@ footer.blockquote-footer {
   padding-top: 1rem;
 }
 
+.container.login {
+  text-align: center;
+}
+
+.container.login form div label {
+  padding-right: 1rem;
+  padding-top: 1rem;
+}
+
 hr {
   background-color: var(--bg-color);
   margin: 0;
